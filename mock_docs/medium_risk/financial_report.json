@@ -1,0 +1,18 @@
+{
+  "document_type": "financial_report",
+  "period": "last_6_months",
+  "revenues_last_6_months_rub": [
+    400000,
+    500000,
+    450000,
+    480000,
+    475000,
+    500000
+  ],
+  "average_monthly_operating_expenses_rub": 200000,
+  "equity_rub": 1500000,
+  "current_assets_rub": 1100000,
+  "current_liabilities_rub": 1000000,
+  "outstanding_debt_before_new_loan_rub": 100000,
+  "existing_monthly_debt_payments_rub": 50000
+}
