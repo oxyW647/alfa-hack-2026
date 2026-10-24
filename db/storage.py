@@ -65,6 +65,14 @@ class ApplicationStorage:
             "payload": json.loads(row["payload_json"])
         }
 
+    def update_company_payload(self, company_id: int, payload: dict):
+        """Обновляет данные компании (например, после загрузки документов)."""
+        with self._get_connection() as conn:
+            conn.execute(
+                "UPDATE companies SET payload_json = ? WHERE id = ?",
+                (json.dumps(payload, ensure_ascii=False), company_id)
+            )
+
     def save_application(self, company_id: int, loan: Dict[str, Any], checks: Dict[str, Any] = None) -> int:
         """Сохраняет заявку. Возвращает её ID."""
         with self._get_connection() as conn:
