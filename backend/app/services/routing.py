@@ -41,7 +41,7 @@ def evaluate_route(
         return RouteDecision(Route.MANUAL_REVIEW, "Требуется дополнительное рассмотрение", version)
     if score > policy.approve_above_score:
         return RouteDecision(
-            Route.APPROVED, "Порог модели превышен; проверки пройдены", version
+            Route.APPROVED, "Порог модели превышен; моковые проверки пройдены", version
         )
     if score >= policy.manual_review_from_score:
         return RouteDecision(Route.MANUAL_REVIEW, "Средний скоринговый риск", version)

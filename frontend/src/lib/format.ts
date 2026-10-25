@@ -1,50 +1,108 @@
-import type { ClientStatus, DocumentType, Route, StageState } from "@/lib/types";
+import type {
+  ClientStatus,
+  CreditHistory,
+  DocumentSource,
+  DocumentType,
+  RiskLevel,
+  Route,
+  StageKey,
+} from "@/lib/types";
+
+const NBSP = " ";
+
+export function groupDigits(value: number | string): string {
+  const digits = String(Math.round(Number(value))).replace(/[^\d-]/g, "");
+  return digits.replace(/\B(?=(\d{3})+(?!\d))/g, NBSP);
+}
 
 export const money = (value: number | null | undefined): string =>
-  value == null ? "—" : `${Math.round(value).toLocaleString("ru-RU")} ₽`;
+  value == null ? "—" : `${groupDigits(value)}${NBSP}₽`;
+
+export const months = (value: number): string => `${value}${NBSP}мес.`;
+
+export const dateLong = (value: string | null | undefined): string =>
+  value
+    ? new Date(value).toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" })
+    : "—";
 
 export const dateTime = (value: string | null | undefined): string =>
-  value ? new Date(value).toLocaleString("ru-RU") : "—";
+  value
+    ? new Date(value).toLocaleString("ru-RU", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "—";
 
-export const STATUS_LABEL: Record<ClientStatus, string> = {
-  DRAFT: "Черновик",
-  IN_PROGRESS: "В обработке",
-  MORE_INFO_REQUIRED: "Нужны уточнения",
-  UNDER_REVIEW: "На рассмотрении",
-  APPROVED_DEMO: "Одобрено (демо)",
-  NOT_APPROVED_DEMO: "Не одобрено (демо)",
-  OFFER_ACCEPTED_DEMO: "Предложение принято",
+export const timeShort = (value: string | null | undefined): string =>
+  value
+    ? new Date(value).toLocaleString("ru-RU", {
+        day: "numeric",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "—";
+
+export function applicationNumber(id: number, createdAt: string): string {
+  return `№${NBSP}${new Date(createdAt).getFullYear()}-${String(id).padStart(5, "0")}`;
+}
+
+export interface Tone {
+  label: string;
+  badge: string;
+  dot: string;
+}
+
+export const STATUS_TONE: Record<ClientStatus, Tone> = {
+  DRAFT: { label: "Черновик", badge: "bg-mist-200 text-ink-600", dot: "bg-mist-400" },
+  IN_PROGRESS: { label: "В обработке", badge: "bg-sky-100 text-sky-900", dot: "bg-sky-500" },
+  MORE_INFO_REQUIRED: {
+    label: "Нужны уточнения",
+    badge: "bg-amber-100 text-amber-900",
+    dot: "bg-amber-500",
+  },
+  UNDER_REVIEW: {
+    label: "На рассмотрении",
+    badge: "bg-violet-100 text-violet-900",
+    dot: "bg-violet-500",
+  },
+  APPROVED_DEMO: {
+    label: "Одобрено (демо)",
+    badge: "bg-lime-100 text-lime-900",
+    dot: "bg-lime-700",
+  },
+  NOT_APPROVED_DEMO: {
+    label: "Не одобрено (демо)",
+    badge: "bg-red-50 text-red-700",
+    dot: "bg-red-500",
+  },
+  OFFER_ACCEPTED_DEMO: {
+    label: "Предложение принято",
+    badge: "bg-pine text-white",
+    dot: "bg-lime-500",
+  },
 };
 
-export const STATUS_TONE: Record<ClientStatus, string> = {
-  DRAFT: "bg-neutral-200 text-neutral-700",
-  IN_PROGRESS: "bg-blue-100 text-blue-800",
-  MORE_INFO_REQUIRED: "bg-amber-100 text-amber-800",
-  UNDER_REVIEW: "bg-violet-100 text-violet-800",
-  APPROVED_DEMO: "bg-emerald-100 text-emerald-800",
-  NOT_APPROVED_DEMO: "bg-red-100 text-red-800",
-  OFFER_ACCEPTED_DEMO: "bg-emerald-200 text-emerald-900",
+export const RISK_TONE: Record<RiskLevel, string> = {
+  LOW: "bg-lime-100 text-lime-900",
+  MEDIUM: "bg-amber-100 text-amber-900",
+  HIGH: "bg-red-500 text-white",
 };
 
-export const STATE_LABEL: Record<StageState, string> = {
-  done: "Выполнен",
-  failed: "Ошибка",
-  available: "Доступен",
-  locked: "Заблокирован",
+export const ROUTE_TONE: Record<Route, string> = {
+  APPROVED: "bg-lime-100 text-lime-900",
+  MANUAL_REVIEW: "bg-violet-100 text-violet-900",
+  DECLINED: "bg-red-50 text-red-700",
+  REQUEST_DOCUMENTS: "bg-amber-100 text-amber-900",
 };
 
-export const STATE_TONE: Record<StageState, string> = {
-  done: "bg-emerald-100 text-emerald-800",
-  failed: "bg-red-100 text-red-800",
-  available: "bg-blue-100 text-blue-800",
-  locked: "bg-neutral-200 text-neutral-500",
-};
-
-export const ROUTE_LABEL: Record<Route, string> = {
-  APPROVED: "APPROVED",
-  MANUAL_REVIEW: "MANUAL_REVIEW",
-  DECLINED: "DECLINED",
-  REQUEST_DOCUMENTS: "REQUEST_DOCUMENTS",
+export const SOURCE_TONE: Record<DocumentSource, { label: string; badge: string }> = {
+  registry: { label: "Реестр", badge: "bg-ink-900 text-white" },
+  upload: { label: "Клиент", badge: "bg-sky-100 text-sky-900" },
+  employee: { label: "Сотрудник", badge: "bg-violet-100 text-violet-900" },
 };
 
 export const DOCUMENT_LABEL: Record<DocumentType, string> = {
@@ -53,31 +111,81 @@ export const DOCUMENT_LABEL: Record<DocumentType, string> = {
   financial_report: "Финансовая отчётность",
 };
 
-export const DOCUMENT_TEMPLATES: Record<DocumentType, Record<string, unknown>> = {
-  egrul_extract: {
-    document_type: "egrul_extract",
-    company_name: "",
-    inn: "",
-    ogrn: "",
-    age_months: 0,
-    registration_active: true,
-    director: "",
-  },
-  bki_report: {
-    document_type: "bki_report",
-    credit_history_status: "no_overdues_12m",
-    active_loans_count: 0,
-    total_debt_rub: 0,
-  },
-  financial_report: {
-    document_type: "financial_report",
-    period: "last_6_months",
-    revenues_last_6_months_rub: [0, 0, 0, 0, 0, 0],
-    average_monthly_operating_expenses_rub: 0,
-    equity_rub: 0,
-    current_assets_rub: 0,
-    current_liabilities_rub: 0,
-    outstanding_debt_before_new_loan_rub: 0,
-    existing_monthly_debt_payments_rub: 0,
-  },
+export const CREDIT_HISTORY_LABEL: Record<CreditHistory, string> = {
+  no_overdues_12m: "Нет просрочек за 12 мес.",
+  no_history: "Истории нет",
+  closed_overdue_under_30: "Закрытые просрочки до 30 дней",
+  closed_overdue_30_89: "Закрытые просрочки 30–89 дней",
+  current_or_90plus_overdue: "Текущая просрочка или 90+ дней",
 };
+
+export const STAGE_ORDER: StageKey[] = [
+  "preliminary_scoring",
+  "documents",
+  "verification",
+  "final_scoring",
+  "decision",
+];
+
+export const STAGE_TITLE: Record<StageKey, string> = {
+  preliminary_scoring: "Предварительная оценка",
+  documents: "Получение документов",
+  verification: "Проверка данных",
+  final_scoring: "Итоговая оценка",
+  decision: "Решение",
+};
+
+export const FIELD_LABEL: Record<string, string> = {
+  "company.age_months": "Возраст бизнеса",
+  "financials.revenues_last_6_months_rub": "Выручка за 6 месяцев",
+  "financials.average_monthly_operating_expenses_rub": "Операционные расходы",
+  "financials.existing_monthly_debt_payments_rub": "Платежи по долгам",
+  "financials.outstanding_debt_before_new_loan_rub": "Остаток долга до нового кредита",
+  "financials.equity_rub": "Собственный капитал",
+  "financials.current_assets_rub": "Оборотные активы",
+  "financials.current_liabilities_rub": "Краткосрочные обязательства",
+  credit_history: "Кредитная история",
+};
+
+export const FACTOR_LABEL: Record<string, string> = {
+  dscr: "Покрытие долговых платежей денежным потоком",
+  credit_history: "Кредитная история",
+  debt_to_equity: "Долговая нагрузка относительно капитала",
+  liquidity: "Текущая ликвидность",
+  revenue_stability: "Стабильность выручки",
+  business_age: "Срок работы бизнеса",
+};
+
+export const METRIC_LABEL: Record<string, string> = {
+  dscr: "DSCR",
+  debt_to_equity: "Долг / капитал",
+  liquidity: "Ликвидность",
+  revenue_cv_pct: "CV выручки",
+  new_payment_rub: "Платёж",
+  mean_monthly_revenue_rub: "Средняя выручка",
+  cf_proxy_rub: "Денежный поток",
+};
+
+export function metricValue(key: string, value: number | null): string {
+  if (value == null) return "—";
+  if (key.endsWith("_rub")) return money(value);
+  if (key === "revenue_cv_pct") return `${String(value).replace(".", ",")}%`;
+  return value.toFixed(2).replace(".", ",");
+}
+
+export function discrepancyValue(field: string, value: unknown): string {
+  if (typeof value === "number") return field.endsWith("_rub") ? money(value) : String(value);
+  if (typeof value === "string" && value in CREDIT_HISTORY_LABEL) {
+    return CREDIT_HISTORY_LABEL[value as CreditHistory];
+  }
+  return String(value ?? "—");
+}
+
+export function monthLabels(count = 6): string[] {
+  const now = new Date();
+  return Array.from({ length: count }, (_, index) => {
+    const date = new Date(now.getFullYear(), now.getMonth() - (count - index), 1);
+    const name = date.toLocaleDateString("ru-RU", { month: "long" });
+    return `${name.charAt(0).toUpperCase()}${name.slice(1)} ${date.getFullYear()}`;
+  });
+}

@@ -27,7 +27,18 @@ export type ClientStatus =
 
 export type Route = "APPROVED" | "MANUAL_REVIEW" | "DECLINED" | "REQUEST_DOCUMENTS";
 
+export type RiskLevel = "LOW" | "MEDIUM" | "HIGH";
+
 export type DocumentType = "egrul_extract" | "bki_report" | "financial_report";
+
+export type DocumentSource = "registry" | "upload" | "employee";
+
+export type CreditHistory =
+  | "no_overdues_12m"
+  | "no_history"
+  | "closed_overdue_under_30"
+  | "closed_overdue_30_89"
+  | "current_or_90plus_overdue";
 
 export interface PipelineStage {
   stage: StageKey;
@@ -63,14 +74,36 @@ export interface ActionItem {
 
 export interface DocumentBrief {
   doc_type: DocumentType;
-  source: "registry" | "upload" | "employee";
+  source: DocumentSource;
   created_at: string;
+}
+
+export interface Financials {
+  revenues_last_6_months_rub?: (number | null)[] | null;
+  average_monthly_operating_expenses_rub?: number | null;
+  existing_monthly_debt_payments_rub?: number | null;
+  outstanding_debt_before_new_loan_rub?: number | null;
+  equity_rub?: number | null;
+  current_assets_rub?: number | null;
+  current_liabilities_rub?: number | null;
+}
+
+export interface Declared {
+  age_months?: number | null;
+  financials?: Financials | null;
+  credit_history?: CreditHistory | null;
+}
+
+export interface Company {
+  inn: string;
+  name: string;
+  legal_form: "IP" | "OOO";
 }
 
 export interface Application {
   id: number;
   created_at: string;
-  company: { inn: string; name: string; legal_form: "IP" | "OOO" };
+  company: Company;
   loan: {
     amount_rub: number;
     term_months: number;
@@ -81,6 +114,7 @@ export interface Application {
   status: ClientStatus;
   status_title: string;
   status_text: string;
+  declared: Declared;
   actions: ActionItem[];
   offer: OfferTerms | null;
   alternative_offer: OfferTerms | null;
@@ -106,7 +140,7 @@ export interface Assessment {
   data_source: string;
   model_version: string;
   score: number;
-  risk_level: "LOW" | "MEDIUM" | "HIGH";
+  risk_level: RiskLevel;
   breakdown: Record<string, number>;
   metrics: Record<string, number | null>;
   factors: Factor[];
@@ -124,18 +158,24 @@ export interface CheckItem {
   details: string;
 }
 
+export interface Discrepancy {
+  field: string;
+  declared: unknown;
+  documented: unknown;
+}
+
 export interface Checks {
   documents_verified: boolean;
   registration_active: boolean;
   product_eligible: boolean;
   fraud_check_passed: boolean;
+  documents_trusted: boolean;
   checks: CheckItem[];
-  discrepancies: { field: string; declared: unknown; documented: unknown }[];
+  discrepancies: Discrepancy[];
 }
 
 export interface EmployeeApplication extends Application {
   owner_id: number;
-  declared: Record<string, unknown>;
   checks: Checks | null;
   route: Route | null;
   assessments: Assessment[];
@@ -171,15 +211,15 @@ export interface Page<T> {
 export interface Scenario {
   key: string;
   title: string;
-  company: { inn: string; name: string; legal_form: "IP" | "OOO" };
+  company: Company;
   loan: { amount_rub: number; term_months: number; purpose?: string };
-  declared: Record<string, unknown>;
+  declared: Declared;
 }
 
 export interface ApplicationDraft {
-  company: { inn: string; name: string; legal_form: "IP" | "OOO" };
+  company: Company;
   loan: { amount_rub: number; term_months: number; purpose: string | null };
-  declared: Record<string, unknown>;
+  declared: Declared;
 }
 
 export function isEmployeeApplication(app: AnyApplication): app is EmployeeApplication {

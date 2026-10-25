@@ -2,24 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-neutral-100 text-neutral-900 antialiased;
+@layer base {
+  body {
+    @apply bg-mist-100 font-sans text-ink-900 antialiased;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+  button:focus-visible,
+  a:focus-visible,
+  [role="radio"]:focus-visible {
+    @apply outline-none shadow-focus;
+  }
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: none;
+  }
+  details > summary {
+    list-style: none;
+  }
+  details > summary::-webkit-details-marker {
+    display: none;
+  }
 }
 
 @layer components {
+  .eyebrow {
+    @apply text-xs font-bold uppercase tracking-[0.08em] text-ink-500;
+  }
   .btn {
-    @apply inline-flex items-center justify-center rounded-md border border-neutral-300 bg-white px-3 py-1.5 text-sm font-medium transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-40;
+    @apply inline-flex items-center justify-center gap-2 rounded-field font-bold transition-colors disabled:cursor-not-allowed;
   }
   .btn-primary {
-    @apply border-brand bg-brand text-white hover:bg-brand-dark;
+    @apply bg-red-500 text-white hover:bg-red-600 active:bg-red-700 disabled:bg-mist-200 disabled:text-ink-400;
   }
-  .input {
-    @apply w-full rounded-md border border-neutral-300 bg-white px-3 py-1.5 text-sm outline-none focus:border-neutral-500;
+  .btn-secondary {
+    @apply bg-mist-100 text-ink-900 hover:bg-line active:bg-mist-300 disabled:bg-mist-50 disabled:text-ink-400;
+  }
+  .btn-outline {
+    @apply border-[1.5px] border-ink-900 bg-white text-ink-900 hover:bg-mist-50 disabled:border-mist-300 disabled:text-ink-400;
+  }
+  .input-shell {
+    @apply flex items-center gap-2 rounded-field border-[1.5px] border-line bg-white px-4 transition-shadow focus-within:border-ink-900 focus-within:shadow-[0_0_0_4px_rgba(239,49,36,0.16)];
+  }
+  .input-shell-error {
+    @apply border-red-500 bg-[#FFF7F6];
   }
   .card {
-    @apply rounded-xl border border-neutral-200 bg-white p-4 shadow-sm;
-  }
-  .label {
-    @apply mb-1 block text-xs font-medium text-neutral-500;
+    @apply rounded-section bg-white;
   }
 }

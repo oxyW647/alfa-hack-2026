@@ -104,6 +104,7 @@ class ClientApplicationOut(BaseModel):
     status: ClientStatus
     status_title: str
     status_text: str
+    declared: dict[str, Any]
     actions: list[ActionOut]
     offer: OfferTermsOut | None
     alternative_offer: OfferTermsOut | None
@@ -147,7 +148,6 @@ class ManualReviewOut(BaseModel):
 
 class EmployeeApplicationOut(ClientApplicationOut):
     owner_id: int
-    declared: dict[str, Any]
     checks: dict[str, Any] | None
     route: Route | None
     assessments: list[AssessmentOut]

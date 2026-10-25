@@ -60,7 +60,7 @@ async def update_application(
     access: AccessDep,
     user: CurrentUser,
 ):
-    application = await access.application_for(application_id, user)
+    application = await access.application_for(application_id, user, writable=True)
     return service.present(await service.update(application, payload), user)
 
 
@@ -72,7 +72,7 @@ async def put_document(
     access: AccessDep,
     user: CurrentUser,
 ):
-    application = await access.application_for(application_id, user)
+    application = await access.application_for(application_id, user, writable=True)
     return service.present(await service.put_document(application, payload, user), user)
 
 
@@ -80,7 +80,7 @@ async def put_document(
 async def reset_application(
     application_id: int, service: ApplicationDep, access: AccessDep, user: CurrentUser
 ):
-    application = await access.application_for(application_id, user)
+    application = await access.application_for(application_id, user, writable=True)
     return service.present(await service.reset(application), user)
 
 
@@ -100,7 +100,7 @@ async def run_stage(
     access: AccessDep,
     user: CurrentUser,
 ):
-    application = await access.application_for(application_id, user)
+    application = await access.application_for(application_id, user, writable=True)
     await pipeline.run_stage(application, stage)
     return pipeline.view(application, internal=user.is_employee)
 
@@ -109,7 +109,7 @@ async def run_stage(
 async def run_pipeline(
     application_id: int, pipeline: PipelineDep, access: AccessDep, user: CurrentUser
 ):
-    application = await access.application_for(application_id, user)
+    application = await access.application_for(application_id, user, writable=True)
     await pipeline.run_all(application)
     return pipeline.view(application, internal=user.is_employee)
 

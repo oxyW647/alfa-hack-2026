@@ -162,6 +162,7 @@ class ApplicationService(BaseService):
             status=client_status,
             status_title=title,
             status_text=text,
+            declared=application.declared,
             actions=required_actions(application),
             offer=offer,
             alternative_offer=alternative,
@@ -196,7 +197,6 @@ class ApplicationService(BaseService):
         return EmployeeApplicationOut(
             **base.model_dump(),
             owner_id=application.owner_id,
-            declared=application.declared,
             checks=application.checks,
             route=application.route,
             assessments=[AssessmentOut.model_validate(a) for a in application.assessments],

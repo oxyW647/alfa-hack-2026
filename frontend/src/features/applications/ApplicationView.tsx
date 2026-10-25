@@ -1,103 +1,190 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-import { Badge } from "@/components/Badge";
+import { RiskBadge } from "@/components/Badges";
+import { AlertIcon, RepeatIcon } from "@/components/icons";
 import { errorText } from "@/lib/api";
-import { DOCUMENT_LABEL, STATUS_LABEL, STATUS_TONE, money } from "@/lib/format";
-import { useApplication, usePipeline, useUpdateApplication } from "@/lib/queries";
-import type { ApplicationDraft } from "@/lib/types";
+import {
+  useApplication,
+  usePipeline,
+  useResetApplication,
+  useRunAll,
+  useRunStage,
+} from "@/lib/queries";
+import type { ActionItem, DocumentType, StageKey } from "@/lib/types";
 import { isEmployeeApplication } from "@/lib/types";
 
-import { ApplicationForm } from "./ApplicationForm";
-import { AssessmentPanel } from "./AssessmentPanel";
 import { DocumentsPanel } from "./DocumentsPanel";
-import { OfferPanel } from "./OfferPanel";
-import { PipelineBoard } from "./PipelineBoard";
-import { ReviewPanel } from "./ReviewPanel";
+import {
+  AssessmentCard,
+  ChecksCard,
+  DiscrepanciesCard,
+  HistoryCard,
+  ReviewCard,
+} from "./EmployeePanels";
+import { PipelineRibbon } from "./PipelineRibbon";
+import { StageDetail } from "./StageDetail";
+import { ApplicationHeader, StatusPanel } from "./StatusPanel";
+
+function ViewSkeleton() {
+  return (
+    <div aria-busy="true" className="flex animate-pulseSoft flex-col gap-5">
+      <div className="card flex flex-col gap-4 p-7">
+        <div className="h-8 w-1/3 rounded bg-line" />
+        <div className="h-4 w-1/4 rounded bg-mist-200" />
+        <div className="h-12 w-1/2 rounded bg-mist-200" />
+      </div>
+      <div className="card h-56 bg-white" />
+      <div className="card h-40 bg-white" />
+    </div>
+  );
+}
 
 export function ApplicationView() {
   const id = Number(useParams().id);
+  const navigate = useNavigate();
   const application = useApplication(id);
   const pipeline = usePipeline(id);
-  const update = useUpdateApplication(id);
-  const [editing, setEditing] = useState(false);
+  const runStage = useRunStage(id);
+  const runAll = useRunAll(id);
+  const reset = useResetApplication(id);
+  const [expanded, setExpanded] = useState<StageKey | null>(null);
+  const [documentType, setDocumentType] = useState<DocumentType>("egrul_extract");
 
-  if (application.isError) {
-    return <div className="card text-sm text-red-600">{errorText(application.error)}</div>;
+  if (application.isError || pipeline.isError) {
+    return (
+      <div role="alert" className="card flex flex-wrap items-center gap-4 p-7">
+        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-red-500">
+          <AlertIcon />
+        </span>
+        <div className="flex flex-1 flex-col gap-0.5">
+          <span className="text-base font-bold">Не удалось загрузить заявку</span>
+          <span className="text-sm text-ink-500">{errorText(application.error ?? pipeline.error)}</span>
+        </div>
+        <button
+          type="button"
+          className="btn btn-primary h-11 px-5"
+          onClick={() => {
+            void application.refetch();
+            void pipeline.refetch();
+          }}
+        >
+          <RepeatIcon size={14} />
+          Повторить
+        </button>
+      </div>
+    );
   }
-  if (!application.data || !pipeline.data) return null;
+  if (!application.data || !pipeline.data) return <ViewSkeleton />;
+
   const app = application.data;
   const employee = isEmployeeApplication(app) ? app : null;
+  const busy = runStage.isPending || runAll.isPending || reset.isPending;
+  const running: StageKey | null = runStage.isPending
+    ? (runStage.variables ?? null)
+    : runAll.isPending
+      ? pipeline.data.next_stage
+      : null;
+  const error = runStage.error ?? runAll.error ?? reset.error;
+  const finished = app.status === "OFFER_ACCEPTED_DEMO";
+  const clientUploads = app.status === "DRAFT" || app.status === "MORE_INFO_REQUIRED";
+  const expandedStage = pipeline.data.stages.find((stage) => stage.stage === expanded);
+  const finalAssessment = employee
+    ? [...employee.assessments].reverse().find((item) => item.kind === "verified")
+    : undefined;
 
-  const draft: ApplicationDraft = {
-    company: app.company,
-    loan: {
-      amount_rub: app.loan.amount_rub,
-      term_months: app.loan.term_months,
-      purpose: app.loan.purpose,
-    },
-    declared: employee?.declared ?? {},
-  };
+  function handleAction(action: ActionItem) {
+    if (action.field) {
+      navigate(`/applications/${id}/edit`);
+      return;
+    }
+    if (action.document_type) setDocumentType(action.document_type);
+    document.getElementById("documents")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 
   return (
-    <div className="space-y-4">
-      <div className="card flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <div className="text-lg font-semibold">{app.company.name}</div>
-          <div className="text-sm text-neutral-500">
-            ИНН {app.company.inn} · {money(app.loan.amount_rub)} · {app.loan.term_months} мес. ·{" "}
-            {money(app.loan.monthly_payment_rub)}/мес.
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <Badge tone={STATUS_TONE[app.status]}>{STATUS_LABEL[app.status]}</Badge>
-          <button className="btn" onClick={() => setEditing(!editing)}>
-            Анкета
-          </button>
-        </div>
-      </div>
-
-      <div className="card">
-        <div className="text-sm font-medium">{app.status_title}</div>
-        <div className="text-sm text-neutral-600">{app.status_text}</div>
-        {app.actions.length > 0 && (
-          <ul className="mt-2 list-disc pl-5 text-sm text-amber-800">
-            {app.actions.map((action, index) => (
-              <li key={index}>
-                {action.document_type
-                  ? `Загрузить: ${DOCUMENT_LABEL[action.document_type]}`
-                  : action.field
-                    ? `Заполнить: ${action.field}`
-                    : "Проверить документы"}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      {editing && (
-        <ApplicationForm
-          key={app.id}
-          initial={draft}
-          editableCompany={false}
-          submitLabel="Сохранить"
-          onSubmit={async (next) => {
-            await update.mutateAsync({ loan: next.loan, declared: next.declared });
-            setEditing(false);
-          }}
-        />
+    <div className="flex flex-col gap-5">
+      {employee ? (
+        <section className="card">
+          <ApplicationHeader
+            app={app}
+            big
+            onEdit={() => navigate(`/applications/${id}/edit`)}
+            extra={
+              finalAssessment && (
+                <div className="flex flex-col gap-1">
+                  <dt className="text-[13px] font-semibold text-ink-500">Итоговый балл</dt>
+                  <dd className="m-0 flex items-center gap-2">
+                    <span className="text-[26px] font-extrabold leading-[34px]">{finalAssessment.score}</span>
+                    <RiskBadge level={finalAssessment.risk_level} />
+                  </dd>
+                </div>
+              )
+            }
+          />
+        </section>
+      ) : (
+        <section className="card overflow-hidden">
+          <ApplicationHeader
+            app={app}
+            big={["DRAFT", "IN_PROGRESS", "MORE_INFO_REQUIRED", "UNDER_REVIEW"].includes(app.status)}
+            onEdit={() => navigate(`/applications/${id}/edit`)}
+          />
+          <StatusPanel app={app} onAction={handleAction} />
+        </section>
       )}
 
-      <PipelineBoard applicationId={id} pipeline={pipeline.data} />
-
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <div className="space-y-4">
-          <OfferPanel application={app} />
-          {employee && <ReviewPanel application={employee} />}
-          <DocumentsPanel application={app} />
-        </div>
-        {employee && <AssessmentPanel application={employee} />}
+      <div className="flex flex-col gap-3">
+        <PipelineRibbon
+          pipeline={pipeline.data}
+          employee={Boolean(employee)}
+          running={running}
+          busy={busy || finished}
+          expanded={expanded}
+          onToggle={(stage) => setExpanded(expanded === stage ? null : stage)}
+          onRunStage={(stage) => runStage.mutate(stage)}
+          onRunAll={() => runAll.mutate()}
+          onReset={() => {
+            setExpanded(null);
+            reset.mutate();
+          }}
+        />
+        {error && (
+          <div role="alert" className="flex items-center gap-3 rounded-2xl bg-ink-900 px-4 py-3 text-white">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-red-500">
+              <AlertIcon size={15} />
+            </span>
+            <span className="text-sm font-semibold">{errorText(error)}</span>
+          </div>
+        )}
+        {employee && expandedStage && <StageDetail stage={expandedStage} />}
       </div>
+
+      {employee ? (
+        <>
+          <div className="flex flex-wrap items-start gap-5">
+            <AssessmentCard app={employee} />
+            <div className="flex min-w-0 flex-[1_1_380px] flex-col gap-5">
+              <HistoryCard app={employee} />
+              <ReviewCard app={employee} />
+            </div>
+          </div>
+          <div className="flex flex-wrap items-start gap-5">
+            <ChecksCard app={employee} />
+            <div className="flex min-w-0 flex-[1_1_380px] flex-col gap-5">
+              <DiscrepanciesCard app={employee} />
+            </div>
+          </div>
+        </>
+      ) : null}
+
+      <DocumentsPanel
+        app={app}
+        employee={Boolean(employee)}
+        canUpload={employee ? !finished : clientUploads}
+        selectedType={documentType}
+        onSelectType={setDocumentType}
+      />
     </div>
   );
 }
