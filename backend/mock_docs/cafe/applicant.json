@@ -1,0 +1,33 @@
+{
+  "title": "Кофейня: оценка падает после проверки документов",
+  "company": {
+    "inn": "781045678123",
+    "name": "ИП Уют Кофе",
+    "legal_form": "IP"
+  },
+  "loan": {
+    "amount_rub": 1200000,
+    "term_months": 24,
+    "purpose": "Расширение кофейни"
+  },
+  "declared": {
+    "age_months": 48,
+    "financials": {
+      "revenues_last_6_months_rub": [
+        850000,
+        1200000,
+        1100000,
+        980000,
+        1100000,
+        770000
+      ],
+      "average_monthly_operating_expenses_rub": 780000,
+      "existing_monthly_debt_payments_rub": 50000,
+      "outstanding_debt_before_new_loan_rub": 300000,
+      "equity_rub": 4000000,
+      "current_assets_rub": 1100000,
+      "current_liabilities_rub": 1000000
+    },
+    "credit_history": "no_overdues_12m"
+  }
+}

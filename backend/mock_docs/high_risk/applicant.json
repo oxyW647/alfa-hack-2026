@@ -1,0 +1,33 @@
+{
+  "title": "Высокий риск, неактивная регистрация",
+  "company": {
+    "inn": "3405120002",
+    "name": "ООО Лепесток",
+    "legal_form": "OOO"
+  },
+  "loan": {
+    "amount_rub": 1500000,
+    "term_months": 12,
+    "purpose": "Открытие новой точки"
+  },
+  "declared": {
+    "age_months": 6,
+    "financials": {
+      "revenues_last_6_months_rub": [
+        100000,
+        700000,
+        200000,
+        800000,
+        600000,
+        80000
+      ],
+      "average_monthly_operating_expenses_rub": 150000,
+      "equity_rub": 800000,
+      "current_assets_rub": 500000,
+      "current_liabilities_rub": 80000,
+      "outstanding_debt_before_new_loan_rub": 900000,
+      "existing_monthly_debt_payments_rub": 80000
+    },
+    "credit_history": "no_overdues_12m"
+  }
+}

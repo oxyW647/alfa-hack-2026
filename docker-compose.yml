@@ -1,0 +1,61 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: credit-db
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - credit_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  backend:
+    build: ./backend
+    container_name: credit-backend
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0) if urllib.request.urlopen('http://localhost:8000/api/v1/system/health').status==200 else sys.exit(1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_DEMO_CLIENT_EMAIL: ${DEMO_CLIENT_EMAIL:-}
+        VITE_DEMO_CLIENT_PASSWORD: ${DEMO_CLIENT_PASSWORD:-}
+        VITE_DEMO_EMPLOYEE_EMAIL: ${DEMO_EMPLOYEE_EMAIL:-}
+        VITE_DEMO_EMPLOYEE_PASSWORD: ${DEMO_EMPLOYEE_PASSWORD:-}
+    container_name: credit-frontend
+    volumes:
+      - credit_web:/web
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: credit-nginx
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_completed_successfully
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - credit_web:/usr/share/nginx/html:ro
+    ports:
+      - "${HTTP_PORT:-8080}:80"
+
+volumes:
+  credit_pgdata:
+  credit_web:

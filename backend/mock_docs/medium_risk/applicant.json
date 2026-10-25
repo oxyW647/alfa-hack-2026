@@ -1,0 +1,33 @@
+{
+  "title": "Средний риск, ручная проверка и альтернативное предложение",
+  "company": {
+    "inn": "8579875343",
+    "name": "ИП Кофе Тайм",
+    "legal_form": "IP"
+  },
+  "loan": {
+    "amount_rub": 1500000,
+    "term_months": 12,
+    "purpose": "Пополнение оборотных средств"
+  },
+  "declared": {
+    "age_months": 24,
+    "financials": {
+      "revenues_last_6_months_rub": [
+        400000,
+        500000,
+        450000,
+        480000,
+        475000,
+        500000
+      ],
+      "average_monthly_operating_expenses_rub": 200000,
+      "equity_rub": 1500000,
+      "current_assets_rub": 1100000,
+      "current_liabilities_rub": 1000000,
+      "outstanding_debt_before_new_loan_rub": 100000,
+      "existing_monthly_debt_payments_rub": 50000
+    },
+    "credit_history": "no_overdues_12m"
+  }
+}

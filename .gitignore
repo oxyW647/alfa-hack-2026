@@ -1,0 +1,17 @@
+.env
+*.local
+
+.venv/
+__pycache__/
+*.pyc
+.ruff_cache/
+.pytest_cache/
+
+node_modules/
+frontend/dist/
+frontend/tsconfig.tsbuildinfo
+
+.idea/
+.DS_Store
+*.db
+*.sqlite

@@ -1,0 +1,1370 @@
+{
+  "metadata": {
+    "synthetic": true,
+    "case_count": 34,
+    "purpose": "Negative contract validation; do not feed to successful scoring UI"
+  },
+  "cases": [
+    {
+      "case_id": "ERR_001",
+      "mutation": "missing_loan",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INSUFFICIENT_DATA",
+        "field": "loan"
+      }
+    },
+    {
+      "case_id": "ERR_002",
+      "mutation": "loan_string",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": "1000000",
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INVALID_INPUT",
+        "field": "loan.amount_rub"
+      }
+    },
+    {
+      "case_id": "ERR_003",
+      "mutation": "loan_zero",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 0,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INVALID_INPUT",
+        "field": "loan.amount_rub"
+      }
+    },
+    {
+      "case_id": "ERR_004",
+      "mutation": "loan_negative",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": -1000,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INVALID_INPUT",
+        "field": "loan.amount_rub"
+      }
+    },
+    {
+      "case_id": "ERR_005",
+      "mutation": "term_zero",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 0,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INVALID_INPUT",
+        "field": "loan.term_months"
+      }
+    },
+    {
+      "case_id": "ERR_006",
+      "mutation": "term_fraction",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 12.5,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INVALID_INPUT",
+        "field": "loan.term_months"
+      }
+    },
+    {
+      "case_id": "ERR_007",
+      "mutation": "term_bool",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": true,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INVALID_INPUT",
+        "field": "loan.term_months"
+      }
+    },
+    {
+      "case_id": "ERR_008",
+      "mutation": "term_null",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": null,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INSUFFICIENT_DATA",
+        "field": "loan.term_months"
+      }
+    },
+    {
+      "case_id": "ERR_009",
+      "mutation": "rate_negative",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": -2
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INVALID_INPUT",
+        "field": "loan.annual_rate_percent"
+      }
+    },
+    {
+      "case_id": "ERR_010",
+      "mutation": "rate_string",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": "24"
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INVALID_INPUT",
+        "field": "loan.annual_rate_percent"
+      }
+    },
+    {
+      "case_id": "ERR_011",
+      "mutation": "rate_null",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": null
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INSUFFICIENT_DATA",
+        "field": "loan.annual_rate_percent"
+      }
+    },
+    {
+      "case_id": "ERR_012",
+      "mutation": "missing_company",
+      "application": {
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INSUFFICIENT_DATA",
+        "field": "company"
+      }
+    },
+    {
+      "case_id": "ERR_013",
+      "mutation": "age_float",
+      "application": {
+        "company": {
+          "age_months": 24.3,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INVALID_INPUT",
+        "field": "company.age_months"
+      }
+    },
+    {
+      "case_id": "ERR_014",
+      "mutation": "age_negative",
+      "application": {
+        "company": {
+          "age_months": -1,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INVALID_INPUT",
+        "field": "company.age_months"
+      }
+    },
+    {
+      "case_id": "ERR_015",
+      "mutation": "age_null",
+      "application": {
+        "company": {
+          "age_months": null,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INSUFFICIENT_DATA",
+        "field": "company.age_months"
+      }
+    },
+    {
+      "case_id": "ERR_016",
+      "mutation": "missing_financials",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INSUFFICIENT_DATA",
+        "field": "financials"
+      }
+    },
+    {
+      "case_id": "ERR_017",
+      "mutation": "revenue_5",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            200000,
+            200000,
+            200000,
+            200000,
+            200000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INSUFFICIENT_DATA",
+        "field": "financials.revenues_last_6_months_rub"
+      }
+    },
+    {
+      "case_id": "ERR_018",
+      "mutation": "revenue_7",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            200000,
+            200000,
+            200000,
+            200000,
+            200000,
+            200000,
+            200000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INVALID_INPUT",
+        "field": "financials.revenues_last_6_months_rub"
+      }
+    },
+    {
+      "case_id": "ERR_019",
+      "mutation": "revenue_null",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            200000,
+            200000,
+            200000,
+            200000,
+            200000,
+            null
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INSUFFICIENT_DATA",
+        "field": "financials.revenues_last_6_months_rub"
+      }
+    },
+    {
+      "case_id": "ERR_020",
+      "mutation": "revenue_negative",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            200000,
+            200000,
+            200000,
+            200000,
+            200000,
+            -100
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INVALID_INPUT",
+        "field": "financials.revenues_last_6_months_rub[5].amount"
+      }
+    },
+    {
+      "case_id": "ERR_021",
+      "mutation": "revenue_bool",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            200000,
+            200000,
+            200000,
+            200000,
+            200000,
+            false
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INVALID_INPUT",
+        "field": "financials.revenues_last_6_months_rub[5].amount"
+      }
+    },
+    {
+      "case_id": "ERR_022",
+      "mutation": "revenue_string",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": "200000",
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INVALID_INPUT",
+        "field": "financials.revenues_last_6_months_rub"
+      }
+    },
+    {
+      "case_id": "ERR_023",
+      "mutation": "expense_negative",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": -2,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INVALID_INPUT",
+        "field": "financials.average_monthly_operating_expenses_rub"
+      }
+    },
+    {
+      "case_id": "ERR_024",
+      "mutation": "expense_string",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": "500000",
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INVALID_INPUT",
+        "field": "financials.average_monthly_operating_expenses_rub"
+      }
+    },
+    {
+      "case_id": "ERR_025",
+      "mutation": "payment_negative",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": -3,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INVALID_INPUT",
+        "field": "financials.existing_monthly_debt_payments_rub"
+      }
+    },
+    {
+      "case_id": "ERR_026",
+      "mutation": "outstanding_null",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": null,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INSUFFICIENT_DATA",
+        "field": "financials.outstanding_debt_before_new_loan_rub"
+      }
+    },
+    {
+      "case_id": "ERR_027",
+      "mutation": "assets_negative",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": -5,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INVALID_INPUT",
+        "field": "financials.current_assets_rub"
+      }
+    },
+    {
+      "case_id": "ERR_028",
+      "mutation": "liabilities_negative",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": -5
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INVALID_INPUT",
+        "field": "financials.current_liabilities_rub"
+      }
+    },
+    {
+      "case_id": "ERR_029",
+      "mutation": "equity_null",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": null,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INSUFFICIENT_DATA",
+        "field": "financials.equity_rub"
+      }
+    },
+    {
+      "case_id": "ERR_030",
+      "mutation": "history_null",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": null,
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INSUFFICIENT_DATA",
+        "field": "credit_history"
+      }
+    },
+    {
+      "case_id": "ERR_031",
+      "mutation": "history_unknown",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "not_in_enum",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INVALID_INPUT",
+        "field": "credit_history"
+      }
+    },
+    {
+      "case_id": "ERR_032",
+      "mutation": "zero_assets_liabilities",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 0,
+          "current_liabilities_rub": 0
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INSUFFICIENT_DATA",
+        "field": "financials.current_liabilities_rub"
+      }
+    },
+    {
+      "case_id": "MISSING_REVENUE",
+      "mutation": "legacy_curated",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 24,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INSUFFICIENT_DATA",
+        "field": "financials.revenues_last_6_months_rub"
+      }
+    },
+    {
+      "case_id": "INVALID_TERM",
+      "mutation": "legacy_curated",
+      "application": {
+        "company": {
+          "age_months": 48,
+          "registration_active": true
+        },
+        "loan": {
+          "amount_rub": 1500000,
+          "term_months": 0,
+          "annual_rate_percent": 24
+        },
+        "financials": {
+          "revenues_last_6_months_rub": [
+            1000000,
+            1250000,
+            1400000,
+            1050000,
+            1350000,
+            1150000
+          ],
+          "average_monthly_operating_expenses_rub": 1000000,
+          "existing_monthly_debt_payments_rub": 70000,
+          "outstanding_debt_before_new_loan_rub": 1500000,
+          "equity_rub": 2000000,
+          "current_assets_rub": 1300000,
+          "current_liabilities_rub": 1000000
+        },
+        "credit_history": "no_overdues_12m",
+        "checks": {
+          "documents_verified": true,
+          "fraud_check_passed": true,
+          "product_eligible": true
+        }
+      },
+      "expected_error": {
+        "code": "INVALID_INPUT",
+        "field": "loan.term_months"
+      }
+    }
+  ]
+}

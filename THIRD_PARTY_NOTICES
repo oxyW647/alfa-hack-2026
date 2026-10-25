@@ -1,0 +1,50 @@
+THIRD PARTY NOTICES
+
+Проект «Умный кредитный кабинет предпринимателя» (Альфа-Хак 2026).
+Ниже перечислены сторонние компоненты, модели, датасеты, сервисы и смоделированные интеграции.
+Все данные синтетические и не относятся к реальным компаниям, людям, БКИ или банковским офферам.
+
+1. Материалы кейса
+------------------
+- Скоринговая модель (docs/alfa/scoring.py, credit_policy.py, версия модели 1.2.0, схема 1.0.0)
+  и описание модели (MODEL_OVERVIEW.docx) — комплект команды-аналитика проекта, переносится в
+  backend/app/services/scoring.py и routing.py без изменения алгоритма. Экспертная модель, не
+  обучена на реальных данных.
+- Синтетический датасет (docs/alfa/synthetic_borrowers.json, invalid_cases.json,
+  dataset_summary.json, seed 20261023) — лежит в docs/alfa/, в приложении не используется,
+  служит эталоном при проверке переноса модели.
+- Мок-документы по трём уровням риска (backend/mock_docs/low_risk, medium_risk, high_risk) —
+  из pull request команды (ветка storage); мок «cafe» собран из кейса CAFE_VERIFIED датасета.
+
+2. Смоделированные интеграции
+-----------------------------
+- Реестр ЕГРЮЛ/ЕГРИП — JSON-моки по ИНН, backend/app/services/registry.py.
+- Бюро кредитных историй — JSON-моки (готовая категория кредитной истории).
+- Финансовая отчётность — JSON-моки.
+- Антифрод и стоп-лист — детерминированные правила в backend/app/services/verification.py.
+- Кредитный продукт, ставка и пороги маршрута — демонстрационные значения в
+  backend/app/core/policy.py, не являются предложениями Альфа-Банка.
+- Подписание документов и выдача средств не реализуются.
+
+3. Backend (Python 3.12), лицензии указаны по данным пакетов
+-------------------------------------------------------------
+FastAPI (MIT), Starlette (BSD-3-Clause), Pydantic и pydantic-settings (MIT), SQLAlchemy (MIT),
+asyncpg (Apache-2.0), Alembic (MIT), Uvicorn (BSD-3-Clause), Gunicorn (MIT), bcrypt
+(Apache-2.0), PyJWT (MIT), email-validator (Unlicense), uv (MIT или Apache-2.0).
+Инструмент разработки: ruff (MIT). Точные версии — backend/uv.lock.
+
+4. Frontend
+-----------
+React и React DOM (MIT), React Router (MIT), TanStack Query (MIT), Axios (MIT), Zustand (MIT),
+clsx (MIT), Tailwind CSS (MIT), Vite и @vitejs/plugin-react (MIT), TypeScript (Apache-2.0),
+ESLint и typescript-eslint (MIT, BSD-2-Clause), PostCSS и Autoprefixer (MIT).
+Точные версии — frontend/package-lock.json.
+
+5. Инфраструктура
+-----------------
+PostgreSQL 16 (PostgreSQL License), nginx (BSD-2-Clause), Docker и Docker Compose, образы
+postgres:16-alpine, nginx:1.27-alpine, node:20-alpine, ghcr.io/astral-sh/uv:python3.12-bookworm-slim.
+
+6. Модели ИИ
+------------
+Языковые модели и ИИ-сервисы в решении не используются.
