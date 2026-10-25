@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-mist-100 font-sans text-ink-900 antialiased;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+  button:focus-visible,
+  a:focus-visible,
+  [role="radio"]:focus-visible {
+    @apply outline-none shadow-focus;
+  }
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: none;
+  }
+  details > summary {
+    list-style: none;
+  }
+  details > summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+@layer components {
+  .eyebrow {
+    @apply text-xs font-bold uppercase tracking-[0.08em] text-ink-500;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-field font-bold transition-colors disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply bg-red-500 text-white hover:bg-red-600 active:bg-red-700 disabled:bg-mist-200 disabled:text-ink-400;
+  }
+  .btn-secondary {
+    @apply bg-mist-100 text-ink-900 hover:bg-line active:bg-mist-300 disabled:bg-mist-50 disabled:text-ink-400;
+  }
+  .btn-outline {
+    @apply border-[1.5px] border-ink-900 bg-white text-ink-900 hover:bg-mist-50 disabled:border-mist-300 disabled:text-ink-400;
+  }
+  .input-shell {
+    @apply flex items-center gap-2 rounded-field border-[1.5px] border-line bg-white px-4 transition-shadow focus-within:border-ink-900 focus-within:shadow-[0_0_0_4px_rgba(239,49,36,0.16)];
+  }
+  .input-shell-error {
+    @apply border-red-500 bg-[#FFF7F6];
+  }
+  .card {
+    @apply rounded-section bg-white;
+  }
+}

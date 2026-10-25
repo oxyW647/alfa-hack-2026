@@ -1,0 +1,244 @@
+{
+  "synthetic": true,
+  "total_valid": 1500,
+  "total_invalid": 34,
+  "seed": 20261023,
+  "paired_borrowers": 30,
+  "min_score": 1,
+  "max_score": 100,
+  "mean_score": 51.809,
+  "median_score": 54.0,
+  "risk_level_distribution": {
+    "HIGH": 658,
+    "LOW": 464,
+    "MEDIUM": 378
+  },
+  "route_distribution": {
+    "APPROVED": 314,
+    "DECLINED": 502,
+    "MANUAL_REVIEW": 302,
+    "REQUEST_DOCUMENTS": 382
+  },
+  "stage_distribution": {
+    "preliminary": 382,
+    "verified": 1118
+  },
+  "warning_counts": {
+    "NON_POSITIVE_EQUITY": 13,
+    "NO_CURRENT_LIABILITIES": 1,
+    "NO_REVENUE": 1
+  },
+  "comparison_pairs": [
+    {
+      "borrower_id": "PAIR_001",
+      "preliminary_case_id": "PAIR_001_PRE",
+      "verified_case_id": "PAIR_001_VERIFIED",
+      "score_before": 77,
+      "score_after": 31
+    },
+    {
+      "borrower_id": "PAIR_002",
+      "preliminary_case_id": "PAIR_002_PRE",
+      "verified_case_id": "PAIR_002_VERIFIED",
+      "score_before": 88,
+      "score_after": 38
+    },
+    {
+      "borrower_id": "PAIR_003",
+      "preliminary_case_id": "PAIR_003_PRE",
+      "verified_case_id": "PAIR_003_VERIFIED",
+      "score_before": 82,
+      "score_after": 30
+    },
+    {
+      "borrower_id": "PAIR_004",
+      "preliminary_case_id": "PAIR_004_PRE",
+      "verified_case_id": "PAIR_004_VERIFIED",
+      "score_before": 88,
+      "score_after": 36
+    },
+    {
+      "borrower_id": "PAIR_005",
+      "preliminary_case_id": "PAIR_005_PRE",
+      "verified_case_id": "PAIR_005_VERIFIED",
+      "score_before": 77,
+      "score_after": 26
+    },
+    {
+      "borrower_id": "PAIR_006",
+      "preliminary_case_id": "PAIR_006_PRE",
+      "verified_case_id": "PAIR_006_VERIFIED",
+      "score_before": 82,
+      "score_after": 40
+    },
+    {
+      "borrower_id": "PAIR_007",
+      "preliminary_case_id": "PAIR_007_PRE",
+      "verified_case_id": "PAIR_007_VERIFIED",
+      "score_before": 88,
+      "score_after": 36
+    },
+    {
+      "borrower_id": "PAIR_008",
+      "preliminary_case_id": "PAIR_008_PRE",
+      "verified_case_id": "PAIR_008_VERIFIED",
+      "score_before": 88,
+      "score_after": 41
+    },
+    {
+      "borrower_id": "PAIR_009",
+      "preliminary_case_id": "PAIR_009_PRE",
+      "verified_case_id": "PAIR_009_VERIFIED",
+      "score_before": 88,
+      "score_after": 53
+    },
+    {
+      "borrower_id": "PAIR_010",
+      "preliminary_case_id": "PAIR_010_PRE",
+      "verified_case_id": "PAIR_010_VERIFIED",
+      "score_before": 78,
+      "score_after": 36
+    },
+    {
+      "borrower_id": "PAIR_011",
+      "preliminary_case_id": "PAIR_011_PRE",
+      "verified_case_id": "PAIR_011_VERIFIED",
+      "score_before": 82,
+      "score_after": 40
+    },
+    {
+      "borrower_id": "PAIR_012",
+      "preliminary_case_id": "PAIR_012_PRE",
+      "verified_case_id": "PAIR_012_VERIFIED",
+      "score_before": 79,
+      "score_after": 30
+    },
+    {
+      "borrower_id": "PAIR_013",
+      "preliminary_case_id": "PAIR_013_PRE",
+      "verified_case_id": "PAIR_013_VERIFIED",
+      "score_before": 90,
+      "score_after": 75
+    },
+    {
+      "borrower_id": "PAIR_014",
+      "preliminary_case_id": "PAIR_014_PRE",
+      "verified_case_id": "PAIR_014_VERIFIED",
+      "score_before": 87,
+      "score_after": 45
+    },
+    {
+      "borrower_id": "PAIR_015",
+      "preliminary_case_id": "PAIR_015_PRE",
+      "verified_case_id": "PAIR_015_VERIFIED",
+      "score_before": 87,
+      "score_after": 33
+    },
+    {
+      "borrower_id": "PAIR_016",
+      "preliminary_case_id": "PAIR_016_PRE",
+      "verified_case_id": "PAIR_016_VERIFIED",
+      "score_before": 78,
+      "score_after": 23
+    },
+    {
+      "borrower_id": "PAIR_017",
+      "preliminary_case_id": "PAIR_017_PRE",
+      "verified_case_id": "PAIR_017_VERIFIED",
+      "score_before": 92,
+      "score_after": 47
+    },
+    {
+      "borrower_id": "PAIR_018",
+      "preliminary_case_id": "PAIR_018_PRE",
+      "verified_case_id": "PAIR_018_VERIFIED",
+      "score_before": 78,
+      "score_after": 38
+    },
+    {
+      "borrower_id": "PAIR_019",
+      "preliminary_case_id": "PAIR_019_PRE",
+      "verified_case_id": "PAIR_019_VERIFIED",
+      "score_before": 92,
+      "score_after": 62
+    },
+    {
+      "borrower_id": "PAIR_020",
+      "preliminary_case_id": "PAIR_020_PRE",
+      "verified_case_id": "PAIR_020_VERIFIED",
+      "score_before": 78,
+      "score_after": 55
+    },
+    {
+      "borrower_id": "PAIR_021",
+      "preliminary_case_id": "PAIR_021_PRE",
+      "verified_case_id": "PAIR_021_VERIFIED",
+      "score_before": 90,
+      "score_after": 38
+    },
+    {
+      "borrower_id": "PAIR_022",
+      "preliminary_case_id": "PAIR_022_PRE",
+      "verified_case_id": "PAIR_022_VERIFIED",
+      "score_before": 72,
+      "score_after": 33
+    },
+    {
+      "borrower_id": "PAIR_023",
+      "preliminary_case_id": "PAIR_023_PRE",
+      "verified_case_id": "PAIR_023_VERIFIED",
+      "score_before": 82,
+      "score_after": 30
+    },
+    {
+      "borrower_id": "PAIR_024",
+      "preliminary_case_id": "PAIR_024_PRE",
+      "verified_case_id": "PAIR_024_VERIFIED",
+      "score_before": 84,
+      "score_after": 59
+    },
+    {
+      "borrower_id": "PAIR_025",
+      "preliminary_case_id": "PAIR_025_PRE",
+      "verified_case_id": "PAIR_025_VERIFIED",
+      "score_before": 82,
+      "score_after": 35
+    },
+    {
+      "borrower_id": "PAIR_026",
+      "preliminary_case_id": "PAIR_026_PRE",
+      "verified_case_id": "PAIR_026_VERIFIED",
+      "score_before": 88,
+      "score_after": 41
+    },
+    {
+      "borrower_id": "PAIR_027",
+      "preliminary_case_id": "PAIR_027_PRE",
+      "verified_case_id": "PAIR_027_VERIFIED",
+      "score_before": 81,
+      "score_after": 35
+    },
+    {
+      "borrower_id": "PAIR_028",
+      "preliminary_case_id": "PAIR_028_PRE",
+      "verified_case_id": "PAIR_028_VERIFIED",
+      "score_before": 78,
+      "score_after": 63
+    },
+    {
+      "borrower_id": "PAIR_029",
+      "preliminary_case_id": "PAIR_029_PRE",
+      "verified_case_id": "PAIR_029_VERIFIED",
+      "score_before": 88,
+      "score_after": 41
+    },
+    {
+      "borrower_id": "PAIR_030",
+      "preliminary_case_id": "PAIR_030_PRE",
+      "verified_case_id": "PAIR_030_VERIFIED",
+      "score_before": 75,
+      "score_after": 40
+    }
+  ],
+  "disclaimer": "All distributions are artifacts of stratified synthetic generation and do not estimate bank portfolio risk or model accuracy."
+}

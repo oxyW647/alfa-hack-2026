@@ -1,0 +1,2341 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Умный кредитный кабинет предпринимателя",
+    "description": "Цифровой кредитный конвейер для малого и микробизнеса: заявка, предварительная оценка, документы, проверки, итоговая оценка и решение. Все данные синтетические.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/v1/system/health": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Health",
+        "operationId": "health_api_v1_system_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Health Api V1 System Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Login",
+        "operationId": "login_api_v1_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/me": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Me",
+        "operationId": "me_api_v1_auth_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserOut"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/demo/scenarios": {
+      "get": {
+        "tags": [
+          "demo"
+        ],
+        "summary": "Scenarios",
+        "operationId": "scenarios_api_v1_demo_scenarios_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/DemoScenarioOut"
+                  },
+                  "type": "array",
+                  "title": "Response Scenarios Api V1 Demo Scenarios Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/applications": {
+      "get": {
+        "tags": [
+          "applications"
+        ],
+        "summary": "List Applications",
+        "operationId": "list_applications_api_v1_applications_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 255
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 25,
+              "title": "Size"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_ApplicationListItem_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "applications"
+        ],
+        "summary": "Create Application",
+        "operationId": "create_application_api_v1_applications_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplicationCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/EmployeeApplicationOut"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ClientApplicationOut"
+                    }
+                  ],
+                  "title": "Response Create Application Api V1 Applications Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/applications/{application_id}": {
+      "get": {
+        "tags": [
+          "applications"
+        ],
+        "summary": "Get Application",
+        "operationId": "get_application_api_v1_applications__application_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "application_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Application Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/EmployeeApplicationOut"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ClientApplicationOut"
+                    }
+                  ],
+                  "title": "Response Get Application Api V1 Applications  Application Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "applications"
+        ],
+        "summary": "Update Application",
+        "operationId": "update_application_api_v1_applications__application_id__patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "application_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Application Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplicationUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/EmployeeApplicationOut"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ClientApplicationOut"
+                    }
+                  ],
+                  "title": "Response Update Application Api V1 Applications  Application Id  Patch"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/applications/{application_id}/documents": {
+      "put": {
+        "tags": [
+          "applications"
+        ],
+        "summary": "Put Document",
+        "operationId": "put_document_api_v1_applications__application_id__documents_put",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "application_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Application Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/EgrulDocument"
+                  },
+                  {
+                    "$ref": "#/components/schemas/BkiDocument"
+                  },
+                  {
+                    "$ref": "#/components/schemas/FinancialDocument"
+                  }
+                ],
+                "discriminator": {
+                  "propertyName": "document_type",
+                  "mapping": {
+                    "egrul_extract": "#/components/schemas/EgrulDocument",
+                    "bki_report": "#/components/schemas/BkiDocument",
+                    "financial_report": "#/components/schemas/FinancialDocument"
+                  }
+                },
+                "title": "Payload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/EmployeeApplicationOut"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ClientApplicationOut"
+                    }
+                  ],
+                  "title": "Response Put Document Api V1 Applications  Application Id  Documents Put"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/applications/{application_id}/reset": {
+      "post": {
+        "tags": [
+          "applications"
+        ],
+        "summary": "Reset Application",
+        "operationId": "reset_application_api_v1_applications__application_id__reset_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "application_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Application Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/EmployeeApplicationOut"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ClientApplicationOut"
+                    }
+                  ],
+                  "title": "Response Reset Application Api V1 Applications  Application Id  Reset Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/applications/{application_id}/pipeline": {
+      "get": {
+        "tags": [
+          "applications"
+        ],
+        "summary": "Get Pipeline",
+        "operationId": "get_pipeline_api_v1_applications__application_id__pipeline_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "application_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Application Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PipelineOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/applications/{application_id}/stages/{stage}/run": {
+      "post": {
+        "tags": [
+          "applications"
+        ],
+        "summary": "Run Stage",
+        "operationId": "run_stage_api_v1_applications__application_id__stages__stage__run_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "application_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Application Id"
+            }
+          },
+          {
+            "name": "stage",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Stage"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PipelineOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/applications/{application_id}/run": {
+      "post": {
+        "tags": [
+          "applications"
+        ],
+        "summary": "Run Pipeline",
+        "operationId": "run_pipeline_api_v1_applications__application_id__run_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "application_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Application Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PipelineOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/applications/{application_id}/offer/accept": {
+      "post": {
+        "tags": [
+          "applications"
+        ],
+        "summary": "Accept Offer",
+        "operationId": "accept_offer_api_v1_applications__application_id__offer_accept_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "application_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Application Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcceptOfferIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/EmployeeApplicationOut"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ClientApplicationOut"
+                    }
+                  ],
+                  "title": "Response Accept Offer Api V1 Applications  Application Id  Offer Accept Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/applications/{application_id}/manual-review": {
+      "post": {
+        "tags": [
+          "applications"
+        ],
+        "summary": "Manual Review",
+        "operationId": "manual_review_api_v1_applications__application_id__manual_review_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "application_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Application Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ManualReviewIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmployeeApplicationOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "tags": [
+          "root"
+        ],
+        "summary": "Root",
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Root  Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AcceptOfferIn": {
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/OfferKind"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind"
+        ],
+        "title": "AcceptOfferIn"
+      },
+      "AcceptedOfferOut": {
+        "properties": {
+          "amount_rub": {
+            "type": "number",
+            "title": "Amount Rub"
+          },
+          "term_months": {
+            "type": "integer",
+            "title": "Term Months"
+          },
+          "annual_rate_percent": {
+            "type": "number",
+            "title": "Annual Rate Percent"
+          },
+          "monthly_payment_rub": {
+            "type": "number",
+            "title": "Monthly Payment Rub"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/OfferKind"
+          }
+        },
+        "type": "object",
+        "required": [
+          "amount_rub",
+          "term_months",
+          "annual_rate_percent",
+          "monthly_payment_rub",
+          "kind"
+        ],
+        "title": "AcceptedOfferOut"
+      },
+      "ActionOut": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "document_type": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DocumentType"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "field": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Field"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code"
+        ],
+        "title": "ActionOut"
+      },
+      "ApplicationCreate": {
+        "properties": {
+          "company": {
+            "$ref": "#/components/schemas/CompanyIn"
+          },
+          "loan": {
+            "$ref": "#/components/schemas/LoanIn"
+          },
+          "declared": {
+            "$ref": "#/components/schemas/DeclaredIn"
+          }
+        },
+        "type": "object",
+        "required": [
+          "company",
+          "loan"
+        ],
+        "title": "ApplicationCreate"
+      },
+      "ApplicationListItem": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "company_name": {
+            "type": "string",
+            "title": "Company Name"
+          },
+          "inn": {
+            "type": "string",
+            "title": "Inn"
+          },
+          "amount_rub": {
+            "type": "number",
+            "title": "Amount Rub"
+          },
+          "term_months": {
+            "type": "integer",
+            "title": "Term Months"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ClientStatus"
+          },
+          "route": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Route"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "score": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Score"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "created_at",
+          "company_name",
+          "inn",
+          "amount_rub",
+          "term_months",
+          "status"
+        ],
+        "title": "ApplicationListItem"
+      },
+      "ApplicationUpdate": {
+        "properties": {
+          "loan": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LoanIn"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "declared": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DeclaredIn"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "ApplicationUpdate"
+      },
+      "AssessmentKind": {
+        "type": "string",
+        "enum": [
+          "preliminary",
+          "verified"
+        ],
+        "title": "AssessmentKind"
+      },
+      "AssessmentOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/AssessmentKind"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "data_source": {
+            "type": "string",
+            "title": "Data Source"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version"
+          },
+          "schema_version": {
+            "type": "string",
+            "title": "Schema Version"
+          },
+          "score": {
+            "type": "integer",
+            "title": "Score"
+          },
+          "risk_level": {
+            "$ref": "#/components/schemas/RiskLevel"
+          },
+          "breakdown": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Breakdown"
+          },
+          "metrics": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Metrics"
+          },
+          "factors": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Factors"
+          },
+          "main_risk_factors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Main Risk Factors"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "route": {
+            "$ref": "#/components/schemas/Route"
+          },
+          "route_reason": {
+            "type": "string",
+            "title": "Route Reason"
+          },
+          "policy_version": {
+            "type": "string",
+            "title": "Policy Version"
+          },
+          "input_snapshot": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Input Snapshot"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "created_at",
+          "data_source",
+          "model_version",
+          "schema_version",
+          "score",
+          "risk_level",
+          "breakdown",
+          "metrics",
+          "factors",
+          "main_risk_factors",
+          "warnings",
+          "route",
+          "route_reason",
+          "policy_version",
+          "input_snapshot"
+        ],
+        "title": "AssessmentOut"
+      },
+      "BkiDocument": {
+        "properties": {
+          "document_type": {
+            "type": "string",
+            "const": "bki_report",
+            "title": "Document Type"
+          },
+          "credit_history_status": {
+            "$ref": "#/components/schemas/CreditHistory"
+          },
+          "active_loans_count": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Active Loans Count"
+          },
+          "total_debt_rub": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Total Debt Rub"
+          }
+        },
+        "type": "object",
+        "required": [
+          "document_type",
+          "credit_history_status",
+          "active_loans_count",
+          "total_debt_rub"
+        ],
+        "title": "BkiDocument"
+      },
+      "ClientApplicationOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "company": {
+            "$ref": "#/components/schemas/CompanyOut"
+          },
+          "loan": {
+            "$ref": "#/components/schemas/LoanOut"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ClientStatus"
+          },
+          "status_title": {
+            "type": "string",
+            "title": "Status Title"
+          },
+          "status_text": {
+            "type": "string",
+            "title": "Status Text"
+          },
+          "actions": {
+            "items": {
+              "$ref": "#/components/schemas/ActionOut"
+            },
+            "type": "array",
+            "title": "Actions"
+          },
+          "offer": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OfferTermsOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "alternative_offer": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OfferTermsOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "accepted_offer": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AcceptedOfferOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "accepted_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accepted At"
+          },
+          "documents": {
+            "items": {
+              "$ref": "#/components/schemas/DocumentBriefOut"
+            },
+            "type": "array",
+            "title": "Documents"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "created_at",
+          "company",
+          "loan",
+          "status",
+          "status_title",
+          "status_text",
+          "actions",
+          "offer",
+          "alternative_offer",
+          "accepted_offer",
+          "accepted_at",
+          "documents"
+        ],
+        "title": "ClientApplicationOut"
+      },
+      "ClientStatus": {
+        "type": "string",
+        "enum": [
+          "DRAFT",
+          "IN_PROGRESS",
+          "MORE_INFO_REQUIRED",
+          "UNDER_REVIEW",
+          "APPROVED_DEMO",
+          "NOT_APPROVED_DEMO",
+          "OFFER_ACCEPTED_DEMO"
+        ],
+        "title": "ClientStatus"
+      },
+      "CompanyIn": {
+        "properties": {
+          "inn": {
+            "type": "string",
+            "pattern": "^\\d{10}(\\d{2})?$",
+            "title": "Inn"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "legal_form": {
+            "$ref": "#/components/schemas/LegalForm"
+          }
+        },
+        "type": "object",
+        "required": [
+          "inn",
+          "name",
+          "legal_form"
+        ],
+        "title": "CompanyIn"
+      },
+      "CompanyOut": {
+        "properties": {
+          "inn": {
+            "type": "string",
+            "title": "Inn"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "legal_form": {
+            "$ref": "#/components/schemas/LegalForm"
+          }
+        },
+        "type": "object",
+        "required": [
+          "inn",
+          "name",
+          "legal_form"
+        ],
+        "title": "CompanyOut"
+      },
+      "CreditHistory": {
+        "type": "string",
+        "enum": [
+          "no_overdues_12m",
+          "no_history",
+          "closed_overdue_under_30",
+          "closed_overdue_30_89",
+          "current_or_90plus_overdue"
+        ],
+        "title": "CreditHistory"
+      },
+      "DeclaredIn": {
+        "properties": {
+          "age_months": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Age Months"
+          },
+          "financials": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FinancialsIn"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "credit_history": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CreditHistory"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "DeclaredIn"
+      },
+      "DemoScenarioOut": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "company": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Company"
+          },
+          "loan": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Loan"
+          },
+          "declared": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Declared"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "title",
+          "company",
+          "loan",
+          "declared"
+        ],
+        "title": "DemoScenarioOut"
+      },
+      "DocumentBriefOut": {
+        "properties": {
+          "doc_type": {
+            "$ref": "#/components/schemas/DocumentType"
+          },
+          "source": {
+            "$ref": "#/components/schemas/DocumentSource"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "doc_type",
+          "source",
+          "created_at"
+        ],
+        "title": "DocumentBriefOut"
+      },
+      "DocumentSource": {
+        "type": "string",
+        "enum": [
+          "registry",
+          "upload",
+          "employee"
+        ],
+        "title": "DocumentSource"
+      },
+      "DocumentType": {
+        "type": "string",
+        "enum": [
+          "egrul_extract",
+          "bki_report",
+          "financial_report"
+        ],
+        "title": "DocumentType"
+      },
+      "EgrulDocument": {
+        "properties": {
+          "document_type": {
+            "type": "string",
+            "const": "egrul_extract",
+            "title": "Document Type"
+          },
+          "company_name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Company Name"
+          },
+          "inn": {
+            "type": "string",
+            "pattern": "^\\d{10}(\\d{2})?$",
+            "title": "Inn"
+          },
+          "ogrn": {
+            "type": "string",
+            "pattern": "^\\d{13}(\\d{2})?$",
+            "title": "Ogrn"
+          },
+          "age_months": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Age Months"
+          },
+          "registration_active": {
+            "type": "boolean",
+            "title": "Registration Active"
+          },
+          "director": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Director"
+          }
+        },
+        "type": "object",
+        "required": [
+          "document_type",
+          "company_name",
+          "inn",
+          "ogrn",
+          "age_months",
+          "registration_active",
+          "director"
+        ],
+        "title": "EgrulDocument"
+      },
+      "EmployeeApplicationOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "company": {
+            "$ref": "#/components/schemas/CompanyOut"
+          },
+          "loan": {
+            "$ref": "#/components/schemas/LoanOut"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ClientStatus"
+          },
+          "status_title": {
+            "type": "string",
+            "title": "Status Title"
+          },
+          "status_text": {
+            "type": "string",
+            "title": "Status Text"
+          },
+          "actions": {
+            "items": {
+              "$ref": "#/components/schemas/ActionOut"
+            },
+            "type": "array",
+            "title": "Actions"
+          },
+          "offer": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OfferTermsOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "alternative_offer": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OfferTermsOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "accepted_offer": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AcceptedOfferOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "accepted_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accepted At"
+          },
+          "documents": {
+            "items": {
+              "$ref": "#/components/schemas/DocumentBriefOut"
+            },
+            "type": "array",
+            "title": "Documents"
+          },
+          "owner_id": {
+            "type": "integer",
+            "title": "Owner Id"
+          },
+          "declared": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Declared"
+          },
+          "checks": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Checks"
+          },
+          "route": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Route"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "assessments": {
+            "items": {
+              "$ref": "#/components/schemas/AssessmentOut"
+            },
+            "type": "array",
+            "title": "Assessments"
+          },
+          "comparison": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ScoreComparisonOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "bank_offer": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bank Offer"
+          },
+          "manual_review": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ManualReviewOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "documents_payload": {
+            "additionalProperties": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "object",
+            "title": "Documents Payload"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "created_at",
+          "company",
+          "loan",
+          "status",
+          "status_title",
+          "status_text",
+          "actions",
+          "offer",
+          "alternative_offer",
+          "accepted_offer",
+          "accepted_at",
+          "documents",
+          "owner_id",
+          "declared",
+          "checks",
+          "route",
+          "assessments",
+          "comparison",
+          "bank_offer",
+          "manual_review",
+          "documents_payload"
+        ],
+        "title": "EmployeeApplicationOut"
+      },
+      "FinancialDocument": {
+        "properties": {
+          "document_type": {
+            "type": "string",
+            "const": "financial_report",
+            "title": "Document Type"
+          },
+          "period": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Period"
+          },
+          "revenues_last_6_months_rub": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "maxItems": 6,
+            "minItems": 6,
+            "title": "Revenues Last 6 Months Rub"
+          },
+          "average_monthly_operating_expenses_rub": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Average Monthly Operating Expenses Rub"
+          },
+          "equity_rub": {
+            "type": "number",
+            "title": "Equity Rub"
+          },
+          "current_assets_rub": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Current Assets Rub"
+          },
+          "current_liabilities_rub": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Current Liabilities Rub"
+          },
+          "outstanding_debt_before_new_loan_rub": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Outstanding Debt Before New Loan Rub"
+          },
+          "existing_monthly_debt_payments_rub": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Existing Monthly Debt Payments Rub"
+          }
+        },
+        "type": "object",
+        "required": [
+          "document_type",
+          "period",
+          "revenues_last_6_months_rub",
+          "average_monthly_operating_expenses_rub",
+          "equity_rub",
+          "current_assets_rub",
+          "current_liabilities_rub",
+          "outstanding_debt_before_new_loan_rub",
+          "existing_monthly_debt_payments_rub"
+        ],
+        "title": "FinancialDocument"
+      },
+      "FinancialsIn": {
+        "properties": {
+          "revenues_last_6_months_rub": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Revenues Last 6 Months Rub"
+          },
+          "average_monthly_operating_expenses_rub": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Average Monthly Operating Expenses Rub"
+          },
+          "existing_monthly_debt_payments_rub": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Existing Monthly Debt Payments Rub"
+          },
+          "outstanding_debt_before_new_loan_rub": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outstanding Debt Before New Loan Rub"
+          },
+          "equity_rub": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Equity Rub"
+          },
+          "current_assets_rub": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Assets Rub"
+          },
+          "current_liabilities_rub": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Liabilities Rub"
+          }
+        },
+        "type": "object",
+        "title": "FinancialsIn"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "LegalForm": {
+        "type": "string",
+        "enum": [
+          "IP",
+          "OOO"
+        ],
+        "title": "LegalForm"
+      },
+      "LoanIn": {
+        "properties": {
+          "amount_rub": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Amount Rub"
+          },
+          "term_months": {
+            "type": "integer",
+            "maximum": 600.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Term Months"
+          },
+          "purpose": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Purpose"
+          }
+        },
+        "type": "object",
+        "required": [
+          "amount_rub",
+          "term_months"
+        ],
+        "title": "LoanIn"
+      },
+      "LoanOut": {
+        "properties": {
+          "amount_rub": {
+            "type": "number",
+            "title": "Amount Rub"
+          },
+          "term_months": {
+            "type": "integer",
+            "title": "Term Months"
+          },
+          "annual_rate_percent": {
+            "type": "number",
+            "title": "Annual Rate Percent"
+          },
+          "purpose": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Purpose"
+          },
+          "monthly_payment_rub": {
+            "type": "number",
+            "title": "Monthly Payment Rub"
+          }
+        },
+        "type": "object",
+        "required": [
+          "amount_rub",
+          "term_months",
+          "annual_rate_percent",
+          "purpose",
+          "monthly_payment_rub"
+        ],
+        "title": "LoanOut"
+      },
+      "LoginRequest": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "title": "LoginRequest"
+      },
+      "ManualDecision": {
+        "type": "string",
+        "enum": [
+          "approve",
+          "decline"
+        ],
+        "title": "ManualDecision"
+      },
+      "ManualReviewIn": {
+        "properties": {
+          "decision": {
+            "$ref": "#/components/schemas/ManualDecision"
+          },
+          "comment": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comment"
+          }
+        },
+        "type": "object",
+        "required": [
+          "decision"
+        ],
+        "title": "ManualReviewIn"
+      },
+      "ManualReviewOut": {
+        "properties": {
+          "decision": {
+            "$ref": "#/components/schemas/ManualDecision"
+          },
+          "comment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comment"
+          },
+          "decided_by_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decided By Id"
+          },
+          "decided_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decided At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "decision",
+          "comment",
+          "decided_by_id",
+          "decided_at"
+        ],
+        "title": "ManualReviewOut"
+      },
+      "OfferKind": {
+        "type": "string",
+        "enum": [
+          "requested",
+          "alternative"
+        ],
+        "title": "OfferKind"
+      },
+      "OfferTermsOut": {
+        "properties": {
+          "amount_rub": {
+            "type": "number",
+            "title": "Amount Rub"
+          },
+          "term_months": {
+            "type": "integer",
+            "title": "Term Months"
+          },
+          "annual_rate_percent": {
+            "type": "number",
+            "title": "Annual Rate Percent"
+          },
+          "monthly_payment_rub": {
+            "type": "number",
+            "title": "Monthly Payment Rub"
+          }
+        },
+        "type": "object",
+        "required": [
+          "amount_rub",
+          "term_months",
+          "annual_rate_percent",
+          "monthly_payment_rub"
+        ],
+        "title": "OfferTermsOut"
+      },
+      "Page_ApplicationListItem_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ApplicationListItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "total"
+        ],
+        "title": "Page[ApplicationListItem]"
+      },
+      "PipelineOut": {
+        "properties": {
+          "application_id": {
+            "type": "integer",
+            "title": "Application Id"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ClientStatus"
+          },
+          "next_stage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Stage"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stages": {
+            "items": {
+              "$ref": "#/components/schemas/PipelineStageOut"
+            },
+            "type": "array",
+            "title": "Stages"
+          }
+        },
+        "type": "object",
+        "required": [
+          "application_id",
+          "status",
+          "next_stage",
+          "stages"
+        ],
+        "title": "PipelineOut"
+      },
+      "PipelineStageOut": {
+        "properties": {
+          "stage": {
+            "$ref": "#/components/schemas/Stage"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "state": {
+            "$ref": "#/components/schemas/StageState"
+          },
+          "finished_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finished At"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Result"
+          }
+        },
+        "type": "object",
+        "required": [
+          "stage",
+          "title",
+          "state",
+          "finished_at",
+          "result"
+        ],
+        "title": "PipelineStageOut"
+      },
+      "RiskLevel": {
+        "type": "string",
+        "enum": [
+          "LOW",
+          "MEDIUM",
+          "HIGH"
+        ],
+        "title": "RiskLevel"
+      },
+      "Route": {
+        "type": "string",
+        "enum": [
+          "APPROVED",
+          "MANUAL_REVIEW",
+          "DECLINED",
+          "REQUEST_DOCUMENTS"
+        ],
+        "title": "Route"
+      },
+      "ScoreComparisonOut": {
+        "properties": {
+          "score_before": {
+            "type": "integer",
+            "title": "Score Before"
+          },
+          "score_after": {
+            "type": "integer",
+            "title": "Score After"
+          },
+          "delta": {
+            "type": "integer",
+            "title": "Delta"
+          }
+        },
+        "type": "object",
+        "required": [
+          "score_before",
+          "score_after",
+          "delta"
+        ],
+        "title": "ScoreComparisonOut"
+      },
+      "Stage": {
+        "type": "string",
+        "enum": [
+          "preliminary_scoring",
+          "documents",
+          "verification",
+          "final_scoring",
+          "decision"
+        ],
+        "title": "Stage"
+      },
+      "StageState": {
+        "type": "string",
+        "enum": [
+          "done",
+          "failed",
+          "available",
+          "locked"
+        ],
+        "title": "StageState"
+      },
+      "TokenResponse": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type",
+            "default": "bearer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token"
+        ],
+        "title": "TokenResponse"
+      },
+      "UserOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "full_name": {
+            "type": "string",
+            "title": "Full Name"
+          },
+          "role": {
+            "$ref": "#/components/schemas/UserRole"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "email",
+          "full_name",
+          "role"
+        ],
+        "title": "UserOut"
+      },
+      "UserRole": {
+        "type": "string",
+        "enum": [
+          "client",
+          "employee"
+        ],
+        "title": "UserRole"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

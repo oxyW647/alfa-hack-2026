@@ -1,0 +1,25 @@
+FROM node:20-alpine
+WORKDIR /app
+
+RUN addgroup -S app && adduser -S app -G app
+
+COPY package.json package-lock.json ./
+RUN chown app:app /app
+USER app
+RUN npm ci
+
+COPY --chown=app:app . .
+
+ARG VITE_DEMO_CLIENT_EMAIL=""
+ARG VITE_DEMO_CLIENT_PASSWORD=""
+ARG VITE_DEMO_EMPLOYEE_EMAIL=""
+ARG VITE_DEMO_EMPLOYEE_PASSWORD=""
+ENV VITE_DEMO_CLIENT_EMAIL=$VITE_DEMO_CLIENT_EMAIL \
+    VITE_DEMO_CLIENT_PASSWORD=$VITE_DEMO_CLIENT_PASSWORD \
+    VITE_DEMO_EMPLOYEE_EMAIL=$VITE_DEMO_EMPLOYEE_EMAIL \
+    VITE_DEMO_EMPLOYEE_PASSWORD=$VITE_DEMO_EMPLOYEE_PASSWORD
+
+RUN npm run build
+USER root
+
+CMD ["sh", "-c", "rm -rf /web/* && cp -r dist/. /web/"]
