@@ -50,7 +50,7 @@ function ListItem({ item, employee }: { item: ApplicationListItem; employee: boo
         <span className="text-sm tabular-nums text-ink-600">
           {money(item.amount_rub)} · {months(item.term_months)}
         </span>
-        <span className="flex w-full items-center justify-between gap-2">
+        <span className="flex w-full flex-wrap items-center justify-between gap-x-2 gap-y-1.5">
           <span className="whitespace-nowrap text-[13px] text-ink-500">{applicationNumber(item.id, item.created_at)}</span>
           <StatusBadge status={item.status} size="sm" />
         </span>
@@ -122,7 +122,7 @@ export function ApplicationsLayout() {
       <div className="mx-auto flex max-w-[1440px] flex-wrap items-start gap-6 p-6">
         <aside
           aria-label="Заявки"
-          className="flex flex-[1_1_360px] flex-col gap-3 rounded-3xl bg-white p-4 lg:max-w-[380px]"
+          className="flex flex-[1_1_320px] flex-col gap-3 rounded-3xl bg-white p-4 lg:max-w-[320px]"
         >
           <NavLink
             to="/new"
@@ -158,7 +158,7 @@ export function ApplicationsLayout() {
             <ListItem key={item.id} item={item} employee={Boolean(employee)} />
           ))}
         </aside>
-        <main className="min-w-0 flex-[999_1_640px]">
+        <main className="min-w-0 flex-[999_1_560px]">
           <Outlet />
         </main>
       </div>

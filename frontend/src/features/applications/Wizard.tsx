@@ -521,9 +521,9 @@ function ReviewStep({
       <SummaryBlock title="3 · Сведения о бизнесе" onEdit={() => onEdit(2)}>
         <div className="flex flex-col gap-2">
           <span className="text-[13px] font-semibold text-ink-500">Выручка за последние 6 месяцев</span>
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(150px,100%),1fr))] gap-2">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(190px,100%),1fr))] gap-2">
             {months.map((label, index) => (
-              <div key={label} className="flex justify-between gap-2 rounded-xl bg-white px-3 py-2 text-sm">
+              <div key={label} className="flex justify-between gap-2 whitespace-nowrap rounded-xl bg-white px-3 py-2 text-sm">
                 <span className="text-ink-600">{label.split(" ")[0]}</span>
                 <span className="font-bold tabular-nums">{asMoney(values.revenues[index]) || "—"}</span>
               </div>

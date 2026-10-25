@@ -71,7 +71,14 @@ export function DocumentsPanel({
     <section id="documents" className="card flex flex-col gap-5 p-7">
       <h2 className="m-0 text-2xl font-extrabold leading-[30px]">Документы</h2>
       <div className="flex flex-wrap items-start gap-5">
-        <div className="flex flex-[1_1_320px] flex-col gap-2.5">
+        <div
+          className={clsx(
+            "gap-2.5",
+            canUpload
+              ? "flex flex-[1_1_320px] flex-col"
+              : "grid w-full grid-cols-[repeat(auto-fit,minmax(240px,1fr))]",
+          )}
+        >
           {TYPES.map((type) => {
             const present = app.documents.find((doc) => doc.doc_type === type);
             return (
@@ -96,7 +103,7 @@ export function DocumentsPanel({
                     <SourceBadge source={present?.source ?? null} />
                   </span>
                 </div>
-                {present?.source === "registry" && !employee && (
+                {present?.source === "registry" && !employee && canUpload && (
                   <button
                     type="button"
                     disabled

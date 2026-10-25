@@ -9,7 +9,6 @@ import {
   DocPlusIcon,
   EditIcon,
   EyeIcon,
-  SparkIcon,
   SpinnerIcon,
   UploadIcon,
 } from "@/components/icons";
@@ -297,19 +296,19 @@ export function StatusPanel({
       return (
         <div className="relative flex flex-wrap items-center gap-8 overflow-hidden bg-pine px-8 py-9 text-white">
           <Circles>
-            <div className="absolute -right-20 -top-24 h-[280px] w-[280px] rounded-full bg-white/10" />
+            <div className="absolute -bottom-32 -left-20 h-[260px] w-[260px] rounded-full border-[22px] border-lime-500" />
           </Circles>
           <div className="relative flex flex-[1_1_280px] items-center gap-4">
             <IconBubble tone="bg-lime-500 text-ink-900">
-              <SparkIcon size={26} />
+              <CheckIcon size={28} stroke={3} />
             </IconBubble>
-            <h2 className="m-0 text-[28px] font-extrabold leading-[34px]">{app.status_title}</h2>
+            <h2 className="m-0 text-4xl font-black leading-10 tracking-[-0.02em]">{app.status_title}</h2>
           </div>
           {app.accepted_offer && (
-            <div className="relative flex flex-[1_1_380px] flex-col gap-4">
+            <div className="relative flex flex-[1_1_380px] flex-col gap-[18px] rounded-[22px] bg-white/10 p-6 shadow-[inset_0_0_0_1.5px_rgba(255,255,255,0.22)]">
               <span className="eyebrow !text-lime-500">Принятые условия</span>
               <OfferTable dark terms={app.accepted_offer} />
-              <span className="flex items-center gap-2 text-sm text-[#BFE6CD]">
+              <span className="flex items-center gap-2 text-sm font-semibold text-[#BFE6CD]">
                 <ClockIcon size={14} />
                 {dateLong(app.accepted_at)}
               </span>

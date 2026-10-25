@@ -5,9 +5,6 @@ PostgreSQL), `frontend/` (React + TypeScript + Vite), `nginx/`, `docs/`. Арх�
 `docs/ARCHITECTURE.md`, `docs/API.md`; запуск — `README.md`. Исходные материалы кейса лежат в
 `docs/alfa/` и не правятся.
 
-Стек и структура повторяют `iosource/media-flow` (референс команды): слои, конвенции и формат
-ошибок оттуда.
-
 ## UI copy — ОЧЕНЬ ВАЖНО
 
 Никогда не добавляй в UI пояснительные подписи («капитан очевидность»): текст под

@@ -105,7 +105,7 @@ function StageCard({
   const canRun = !busy && cardState !== "locked" && cardState !== "running";
 
   const shell = clsx(
-    "flex min-w-0 flex-col gap-3 rounded-card p-4",
+    "flex min-w-0 flex-1 flex-col gap-3 rounded-card p-3.5",
     state === "done" && !darkFinal && "border-[1.5px] border-line bg-white",
     darkFinal && "bg-ink-900 text-white",
     state === "failed" && "border-[1.5px] border-red-100 bg-[#FFF7F6]",
@@ -126,12 +126,14 @@ function StageCard({
 
   const actionLabel = state === "done" || state === "failed" ? "Повторить" : "Запустить";
   const actionClass = clsx(
-    "inline-flex h-[38px] items-center justify-center gap-2 rounded-xl text-sm font-bold",
+    "inline-flex h-[38px] min-w-0 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl px-2 text-sm font-bold [&>svg]:flex-none",
     state === "available" && canRun && "bg-red-500 text-white hover:bg-red-600",
     state === "done" && canRun && !darkFinal && "bg-mist-100 text-ink-900 hover:bg-line",
-    darkFinal && "bg-ink-800 text-white hover:bg-ink-600",
+    darkFinal && canRun && "bg-ink-800 text-white hover:bg-ink-600",
     state === "failed" && canRun && "border-[1.5px] border-ink-900 bg-white text-ink-900",
-    (!canRun || state === "locked" || state === "running") && "cursor-not-allowed bg-mist-200 text-ink-400",
+    (!canRun || state === "locked" || state === "running") && "cursor-not-allowed",
+    (!canRun || state === "locked" || state === "running") && !darkFinal && "bg-mist-200 text-ink-400",
+    (!canRun || state === "locked" || state === "running") && darkFinal && "bg-ink-800 text-ink-400",
   );
 
   return (
@@ -142,7 +144,7 @@ function StageCard({
       </div>
       <div
         className={clsx(
-          "flex-1 text-base font-bold leading-[21px]",
+          "flex-1 hyphens-auto break-words text-sm font-bold leading-[18px]",
           state === "locked" && "text-mist-400",
         )}
       >
@@ -154,8 +156,17 @@ function StageCard({
         </div>
       )}
       {employee && summary && (
-        <span className={clsx("text-[13px] font-bold tabular-nums", darkFinal ? "text-ink-300" : "text-ink-600")}>
-          {summary}
+        <span
+          className={clsx(
+            "flex min-w-0 flex-col gap-0.5 text-[13px] font-bold tabular-nums",
+            darkFinal ? "text-ink-300" : "text-ink-600",
+          )}
+        >
+          {summary.split(" · ").map((part, index) => (
+            <span key={index} className={clsx("break-words", index > 0 && "text-[11px] tracking-[-0.01em]")}>
+              {part.replace(/_/g, "_​")}
+            </span>
+          ))}
         </span>
       )}
       {employee && counts && (
@@ -166,7 +177,7 @@ function StageCard({
         </span>
       )}
       <div className="flex items-center justify-between gap-2">
-        <button type="button" disabled={!canRun} onClick={onRun} className={clsx(actionClass, "px-3.5")}>
+        <button type="button" disabled={!canRun} onClick={onRun} className={actionClass}>
           {state === "available" ? <PlayIcon size={12} /> : state === "locked" ? null : <RepeatIcon size={14} />}
           {actionLabel}
         </button>
@@ -176,7 +187,7 @@ function StageCard({
             aria-expanded={expanded}
             aria-label={expanded ? "Свернуть результат" : "Показать результат"}
             onClick={onToggle}
-            className={darkFinal ? "text-white" : "text-ink-600"}
+            className={clsx("flex-none", darkFinal ? "text-white" : "text-ink-600")}
           >
             {expanded ? <ChevronUpIcon size={18} /> : <ChevronDownIcon size={18} />}
           </button>
@@ -240,7 +251,7 @@ export function PipelineRibbon({
         </div>
       </div>
       <div className="flex flex-wrap items-stretch gap-3">
-        <div className="flex flex-[1_1_170px] flex-col gap-[9px] rounded-card bg-mist-50 p-4">
+        <div className="flex flex-[1_1_150px] flex-col gap-[9px] rounded-card bg-mist-50 p-4 xl:max-w-[170px]">
           <span className="eyebrow">Оформление</span>
           {STEPS.map((title, index) => (
             <div key={title} className="flex items-center gap-2.5 text-[13px] font-semibold">
@@ -251,16 +262,11 @@ export function PipelineRibbon({
             </div>
           ))}
         </div>
-        <div className="flex min-w-0 flex-[999_1_600px] flex-col gap-2.5">
-          <div className="grid grid-cols-5 gap-3">
-            {states.map((state, index) => (
-              <div key={index} className={clsx("h-1 rounded-sm", barClass(state, index === states.length - 1))} />
-            ))}
-          </div>
-          <div className="grid flex-1 grid-cols-[repeat(auto-fit,minmax(min(112px,100%),1fr))] gap-3">
-            {pipeline.stages.map((stage, index) => (
+        <div className="grid min-w-0 flex-[999_1_600px] grid-cols-[repeat(auto-fit,minmax(min(132px,100%),1fr))] gap-x-3 gap-y-5">
+          {pipeline.stages.map((stage, index) => (
+            <div key={stage.stage} className="flex min-w-0 flex-col gap-2.5">
+              <div className={clsx("h-1 rounded-sm", barClass(states[index], index === states.length - 1))} />
               <StageCard
-                key={stage.stage}
                 stage={stage}
                 number={index + 5}
                 state={states[index]}
@@ -271,8 +277,8 @@ export function PipelineRibbon({
                 onRun={() => onRunStage(stage.stage)}
                 onToggle={() => onToggle(stage.stage)}
               />
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
     </nav>

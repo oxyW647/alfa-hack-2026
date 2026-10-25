@@ -300,7 +300,7 @@ export function DiscrepanciesCard({ app }: { app: EmployeeApplication }) {
     <section className="card flex flex-col gap-4 p-7">
       <h2 className="m-0 text-[22px] font-extrabold">Расхождения анкеты и документов</h2>
       <div className="overflow-x-auto rounded-[18px] border-[1.5px] border-line">
-        <table className="w-full min-w-[360px] border-collapse text-[15px]">
+        <table className="w-full border-collapse text-[15px]">
           <thead>
             <tr className="bg-mist-50">
               <th scope="col" className="px-4 py-3 text-left text-[13px] font-bold text-ink-600">Поле</th>
@@ -312,10 +312,10 @@ export function DiscrepanciesCard({ app }: { app: EmployeeApplication }) {
             {rows.map((row) => (
               <tr key={row.field} className="border-t border-mist-200">
                 <td className="px-4 py-3.5 font-semibold">{FIELD_LABEL[row.field] ?? row.field}</td>
-                <td className="whitespace-nowrap px-4 py-3.5 text-right tabular-nums text-ink-500">
+                <td className="px-4 py-3.5 text-right tabular-nums text-ink-500">
                   {discrepancyValue(row.field, row.declared)}
                 </td>
-                <td className="whitespace-nowrap px-4 py-3.5 text-right font-extrabold tabular-nums text-red-700">
+                <td className="px-4 py-3.5 text-right font-extrabold tabular-nums text-red-700">
                   {discrepancyValue(row.field, row.documented)}
                 </td>
               </tr>
