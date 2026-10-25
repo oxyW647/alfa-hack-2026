@@ -23,7 +23,7 @@ from app.schemas.pipeline import PipelineOut, PipelineStageOut
 from app.services.alternative_offer import find_alternative_offer
 from app.services.base import BaseService
 from app.services.registry import registry
-from app.services.routing import RouteChecks, evaluate_route
+from app.services.routing import RouteChecks, evaluate_preliminary_route, evaluate_route
 from app.services.scoring import ScoringError, annuity_payment, score_application
 from app.services.statuses import STAGE_TITLES
 from app.services.verification import VerificationInput, verify_documents
@@ -91,9 +91,25 @@ class PipelineService(BaseService):
         super().__init__(session)
         self.applications = ApplicationRepository(session)
 
+    @staticmethod
+    def _preliminary_blocked(application: Application) -> bool:
+        """Protect all later stages from DECLINED and pending MANUAL_REVIEW.
+
+        Approval by an employee releases the stage gate, NOT the loan.
+        """
+        run = application.run_of(Stage.PRELIMINARY_SCORING)
+        if run is None or run.status != StageStatus.DONE:
+            return False
+        if run.result.get("route") == Route.DECLINED.value:
+            return True
+        if run.result.get("route") == Route.MANUAL_REVIEW.value:
+            return run.result.get("review_decision") != "approve"
+        return False
+
     def view(self, application: Application, *, internal: bool) -> PipelineOut:
         stages: list[PipelineStageOut] = []
         next_stage: Stage | None = None
+        blocked = self._preliminary_blocked(application)
         for index, stage in enumerate(ORDER):
             run = application.run_of(stage)
             if run is not None:
@@ -102,7 +118,9 @@ class PipelineService(BaseService):
                 state = StageState.AVAILABLE
             else:
                 state = StageState.LOCKED
-            if next_stage is None and state != StageState.DONE:
+            if blocked and index > 0:
+                state = StageState.LOCKED
+            if not blocked and next_stage is None and state != StageState.DONE:
                 next_stage = stage if state != StageState.LOCKED else None
             stages.append(
                 PipelineStageOut(
@@ -121,6 +139,11 @@ class PipelineService(BaseService):
         )
 
     async def run_stage(self, application: Application, stage: Stage) -> StageRun:
+        if stage != Stage.PRELIMINARY_SCORING and self._preliminary_blocked(application):
+            raise HTTPException(
+                status.HTTP_409_CONFLICT,
+                "После предварительного скоринга заявка отклонена или ожидает решения сотрудника",
+            )
         index = ORDER.index(stage)
         if index > 0 and not application.done(ORDER[index - 1]):
             raise HTTPException(
@@ -142,11 +165,13 @@ class PipelineService(BaseService):
         return run
 
     async def run_all(self, application: Application) -> None:
+        if self._preliminary_blocked(application):
+            return
         for stage in ORDER:
             if application.done(stage):
                 continue
             run = await self.run_stage(application, stage)
-            if run.status == StageStatus.FAILED:
+            if run.status == StageStatus.FAILED or self._preliminary_blocked(application):
                 return
 
     async def invalidate_from(self, application: Application, stage: Stage) -> None:
@@ -173,7 +198,7 @@ class PipelineService(BaseService):
             scored = score_application(data)
         except ScoringError as error:
             return StageStatus.FAILED, {"error": error.as_dict()}
-        decision = evaluate_route(scored["score"], scored["warnings"], RouteChecks(False))
+        decision = evaluate_preliminary_route(scored["score"])
         assessment = self._add_assessment(
             application, AssessmentKind.PRELIMINARY, "declared", data, scored, decision
         )
@@ -183,6 +208,7 @@ class PipelineService(BaseService):
             "score": scored["score"],
             "risk_level": scored["risk_level"],
             "route": decision.route.value,
+            "reason": decision.reason,
             "warnings": scored["warnings"],
         }
 
@@ -252,6 +278,7 @@ class PipelineService(BaseService):
             scored["score"],
             scored["warnings"],
             route_checks(checks),
+            credit_history=data["credit_history"],
         )
         assessment = self._add_assessment(
             application, AssessmentKind.VERIFIED, "documents", {**data, "checks": checks},

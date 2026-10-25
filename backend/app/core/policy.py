@@ -18,9 +18,11 @@ class CreditProduct:
 
 @dataclass(frozen=True)
 class CreditPolicy:
-    version: str = "demo-1.2.0"
+    version: str = "demo-1.4.0"
     approve_above_score: int = 75
     manual_review_from_score: int = 46
+    # Verified credit histories that must never receive automatic approval.
+    manual_review_credit_histories: frozenset[str] = frozenset({"current_or_90plus_overdue"})
     debt_mismatch_tolerance_pct: float = 5.0
     debt_fraud_threshold_pct: float = 50.0
     discrepancy_tolerance_pct: float = 10.0
