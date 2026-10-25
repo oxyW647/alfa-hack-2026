@@ -32,6 +32,7 @@ def evaluate_demo_route(score_result: Mapping[str, Any], application: Mapping[st
     product_eligible = _required_boolean(checks, "product_eligible", "checks")
     fraud_check_passed = _required_boolean(checks, "fraud_check_passed", "checks")
     score = score_result.get("score")
+    alternative_offer = None
     if type(score) is not int or not (0 <= score <= 100):
         raise ScoringError("INVALID_INPUT", "Некорректный результат скоринга", "score")
     warnings = score_result.get("warnings", [])
@@ -51,4 +52,34 @@ def evaluate_demo_route(score_result: Mapping[str, Any], application: Mapping[st
         route, reason = "MANUAL_REVIEW", "Средний скоринговый риск"
     else:
         route, reason = "DECLINED", "Высокий скоринговый риск по правилам демо"
-    return {"route": route, "reason": reason, "policy_version": "demo-1.2.0"}
+
+    if route == "MANUAL_REVIEW":
+        loan = application.get("loan", {})
+        amount = loan.get("amount_rub", 0)
+        term = loan.get("term_months", 0)
+        metrics = score_result.get("metrics", {})
+        dscr = metrics.get("dscr", 0)
+
+        if dscr < 1.2:
+            alternative_offer = {
+                "type": "REDUCED_AMOUNT",
+                "amount_rub": int(amount * 0.7),
+                "term_months": term,
+                "message": "Банк готов предложить 70% от запрошенной суммы."
+            }
+        elif term < 12 and dscr >= 1.2:
+            alternative_offer = {
+                "type": "INCREASED_TERM",
+                "amount_rub": amount,
+                "term_months": term + 6,
+                "message": "Банк готов увеличить срок кредита на 6 месяцев."
+            }
+        else:
+            alternative_offer = {
+                "type": "COLLATERAL_REQUIRED",
+                "amount_rub": amount,
+                "term_months": term,
+                "message": "Для одобрения требуется залог."
+            }
+
+    return {"route": route, "reason": reason, "alternative_offer": alternative_offer, "policy_version": "demo-1.3.0"}
