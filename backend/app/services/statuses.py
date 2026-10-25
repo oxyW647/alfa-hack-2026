@@ -53,6 +53,16 @@ def resolve_client_status(application: Any) -> ClientStatus:
         return ClientStatus.MORE_INFO_REQUIRED
     decision = application.run_of(Stage.DECISION)
     if decision is None:
+        preliminary = application.run_of(Stage.PRELIMINARY_SCORING)
+        if preliminary is not None and preliminary.status == StageStatus.DONE:
+            route = preliminary.result.get("route")
+            if route == Route.DECLINED.value:
+                return ClientStatus.NOT_APPROVED_DEMO
+            if route == Route.MANUAL_REVIEW.value:
+                if preliminary.result.get("review_decision") == "decline":
+                    return ClientStatus.NOT_APPROVED_DEMO
+                if preliminary.result.get("review_decision") != "approve":
+                    return ClientStatus.UNDER_REVIEW
         return ClientStatus.IN_PROGRESS
     route = Route(decision.result["route"])
     if route == Route.MANUAL_REVIEW:

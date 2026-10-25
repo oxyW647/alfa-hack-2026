@@ -194,6 +194,15 @@ class ApplicationService(BaseService):
                 decided_by_id=application.manual_decided_by_id,
                 decided_at=application.manual_decided_at,
             )
+        elif application.run_of(Stage.DECISION) is None:
+            preliminary_run = application.run_of(Stage.PRELIMINARY_SCORING)
+            if preliminary_run is not None and preliminary_run.result.get("review_decision"):
+                manual = ManualReviewOut(
+                    decision=preliminary_run.result["review_decision"],
+                    comment=preliminary_run.result.get("review_comment"),
+                    decided_by_id=preliminary_run.result.get("reviewed_by_id"),
+                    decided_at=preliminary_run.result.get("reviewed_at"),
+                )
         return EmployeeApplicationOut(
             **base.model_dump(),
             owner_id=application.owner_id,

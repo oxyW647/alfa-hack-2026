@@ -206,22 +206,32 @@ export function ReviewCard({ app }: { app: EmployeeApplication }) {
   const review = useManualReview(app.id);
   const [comment, setComment] = useState("");
   if (app.route !== "MANUAL_REVIEW" || app.accepted_at) return null;
+  const isPreliminary = !app.assessments.some((a) => a.kind === "verified");
 
   return (
     <section className="flex flex-col gap-[18px] rounded-section bg-white p-7 shadow-[inset_0_0_0_2px_#7B3FF2]">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="m-0 text-[22px] font-extrabold">Ручное решение</h2>
+        <h2 className="m-0 text-[22px] font-extrabold">
+          {isPreliminary ? "Предварительная ручная проверка" : "Финальное ручное решение"}
+        </h2>
         <span className="rounded-lg bg-violet-100 px-3 py-[5px] text-[13px] font-bold text-violet-900">
           MANUAL_REVIEW
         </span>
       </div>
+      {isPreliminary && !app.manual_review && (
+        <p className="m-0 text-sm text-ink-600">
+          Допуск разрешает следующий этап проверки, но не означает одобрение кредита.
+        </p>
+      )}
       {app.manual_review && (
         <div className="rounded-2xl bg-mist-50 px-4 py-3 text-sm font-semibold">
-          {app.manual_review.decision === "approve" ? "Одобрено" : "Отклонено"}
+          {app.manual_review.decision === "approve"
+            ? (isPreliminary ? "Допуск к проверке документов разрешён" : "Кредит одобрен")
+            : "Отклонено"}
           {app.manual_review.comment ? ` · ${app.manual_review.comment}` : ""}
         </div>
       )}
-      <div className="flex flex-col gap-2">
+      {!app.manual_review && <div className="flex flex-col gap-2">
         <label htmlFor="emp-comment" className="text-sm font-semibold text-ink-600">
           Комментарий
         </label>
@@ -232,15 +242,15 @@ export function ReviewCard({ app }: { app: EmployeeApplication }) {
           onChange={(event) => setComment(event.target.value)}
           className="resize-y rounded-field border-[1.5px] border-line bg-white px-4 py-3.5 text-[15px] leading-[22px] outline-none focus:border-ink-900"
         />
-      </div>
-      <div className="flex flex-wrap gap-3">
+      </div>}
+      {!app.manual_review && <div className="flex flex-wrap gap-3">
         <button
           type="button"
           disabled={review.isPending}
           onClick={() => review.mutate({ decision: "approve", comment: comment || null })}
           className="btn btn-primary h-[54px] flex-[1_1_140px] rounded-2xl text-base font-extrabold"
         >
-          Одобрить
+          {isPreliminary ? "Допустить к документам" : "Одобрить"}
         </button>
         <button
           type="button"
@@ -250,7 +260,7 @@ export function ReviewCard({ app }: { app: EmployeeApplication }) {
         >
           Отклонить
         </button>
-      </div>
+      </div>}
       {review.error && <span className="text-sm font-semibold text-red-700">{errorText(review.error)}</span>}
     </section>
   );

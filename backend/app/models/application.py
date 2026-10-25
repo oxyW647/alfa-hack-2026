@@ -76,6 +76,13 @@ class Application(Base, TimestampMixin):
         decision_run = self.run_of(Stage.DECISION)
         if decision_run is not None and decision_run.status == StageStatus.DONE:
             return Route(decision_run.result["route"])
+        preliminary = self.run_of(Stage.PRELIMINARY_SCORING)
+        if preliminary is not None and preliminary.status == StageStatus.DONE:
+            route = preliminary.result.get("route")
+            if preliminary.result.get("review_decision") == "decline":
+                return Route.DECLINED
+            if route in (Route.DECLINED.value, Route.MANUAL_REVIEW.value):
+                return Route(route)
         return None
 
     @property
